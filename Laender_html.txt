@@ -1,0 +1,42 @@
+Alaska
+<html>Nord<br>Westliche<br>Territorien</html>
+Grönland
+Alberta
+Ontaria
+Quebec
+<html>Westliche<br>USA</html>
+<html>Östliche<br>USA</html>
+<html>Zentral<br>Amerika</html>
+Venezuela
+Peru
+Brasilien
+Argentinien
+Island
+Skandinavien
+Ukraine
+<html>Groß<br>Brittanien</html>
+<html>West<br>Europa</html>
+<html>Nord<br>Europa</html>
+<html>Süd<br>Europa</html>
+<html>Nord Afrika</html>
+Ägypten
+Kongo
+<html>Ost Afrika</html>
+<html>Süd<br>Afrika</html>
+Madagaskar
+Ural
+Sibirien
+Yakutsk
+Kamtchatka
+Irkutsk
+Mongolei
+Afghanistan
+China
+Japan
+<html>Mittlerer Osten</html>
+Indien
+Siam
+Indonesien
+<html>Neu<br>Guinea</html>
+<html>West Australien</html>
+<html>Ost Australien</html>	
