@@ -1,4 +1,4 @@
-package gui;
+package risiko;
 
 import java.awt.Color;
 import java.awt.event.ActionEvent;
@@ -32,13 +32,12 @@ public class menu implements ActionListener {
 		aufloesungY = Y[box.getSelectedIndex()]/1200;
 		playerCount=box2.getSelectedIndex()+1;
 		
-		SwingUtilities.invokeLater(()->{
-			try {
-				new GUI(this.aufloesungX,this.aufloesungX,this.playerCount);
-			} catch (IOException e1) {
-				e1.printStackTrace();
-			}
-		});
+		try {
+			spielSetup();
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 	}
 
 	public menu() {
@@ -87,6 +86,14 @@ public class menu implements ActionListener {
 			return this.playerCount;
 		}
 	
+		public void spielSetup() throws IOException{
+			GUI gui =new GUI(this.aufloesungX,this.aufloesungX,this.playerCount);
+			Welt welt = new Welt(gui);
+			Spiel spiel = new Spiel(this.getPlayerCount(),0,welt);
+			spiel.landverteilung(welt);
+			spiel.truppenverteilung(welt);
+		}
+		
 	}
 	
 
