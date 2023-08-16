@@ -1,4 +1,4 @@
-package gui;
+package risiko;
 
 
 import java.awt.Color;
@@ -45,14 +45,19 @@ public class GUI implements ActionListener{
 		private int height[] = {30,50,30,30,30,30,40,40,40,30,30,30,30,30,30,30,40,40,40,40,30,30,
 			30,30,60,40,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,50,30,30};
 		
+		Color colors[] = {Color.red,Color.green,Color.blue,Color.yellow,Color.ORANGE,Color.MAGENTA};
+		
         JButton nextturn=new JButton();
         JTextArea textfeld = new JTextArea();
         
-        private int currentPlayer=0;
+        public int currentPlayer=0;
         private int phase = 0;
+        private int chooseLand= 100;
         
         
 	public GUI(double scaleX,double scaleY,int playerCount) throws IOException {
+		
+
     	
 		playerlist = new JLabel[playerCount];
 		
@@ -89,7 +94,7 @@ public class GUI implements ActionListener{
         nextturn.setVisible(true);
         nextturn.addActionListener(this);
         
-        textfeld .setBounds((int)(1640*scaleX),(int)(scaleY*500),(int)(260*scaleX),(int)(500*scaleY));
+        textfeld.setBounds((int)(1640*scaleX),(int)(scaleY*500),(int)(260*scaleX),(int)(500*scaleY));
         textfeld.setLineWrap(true);
         textfeld.setWrapStyleWord(true);
         textfeld.setText("default");
@@ -102,6 +107,7 @@ public class GUI implements ActionListener{
         frame.add(textfeld);
         frame.add(pane);
         frame.setVisible(true);
+		nextPlayer();
  
     }
 
@@ -120,7 +126,7 @@ public class GUI implements ActionListener{
         button.setBounds(x, y, height, withd);
         button.setVisible(true);
         button.setContentAreaFilled(true);
-        button.setBackground(Color.red);
+        button.setBackground(Color.gray);
         button.setText(name);
         return button;
     	
@@ -131,7 +137,7 @@ public class GUI implements ActionListener{
         label.setVisible(true);
         label.setText(name);
         label.setOpaque(true);
-        label.setBackground(Color.red);
+        label.setBackground(Color.white);
         return label;
     }
     
@@ -142,7 +148,6 @@ public class GUI implements ActionListener{
 			for (int i =0;i<42;i++) {
 				try {
 		        	list[i]= buildButton((int)(x[i]*xScaling),(int)(y[i]*yScaling),lies.readLine(),(int)(withd[i]*xScaling*1.05),(int)(height[i]*yScaling*1.1),(int)(11*(yScaling)));
-		        	list[i].addActionListener(this);
 		        	frame.add(list[i]);
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
@@ -158,14 +163,8 @@ public class GUI implements ActionListener{
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		 if(e.getSource() == nextturn) {
-			for (int i=0;i<playerlist.length;i++) {
-				playerlist[i].setBackground(Color.white);;
-			}
-			for (int i=0;i<3;i++) {
-				phasenlist[i].setBackground(Color.white);;
-			}
-			playerlist[currentPlayer].setBackground(Color.red);
-			phasenlist[phase].setBackground(Color.green);
+			this.nextPhase();
+			this.nextPlayer();
 			phase =(phase+3+1)%3;
 			if (phase == 0) {
 				
@@ -174,29 +173,39 @@ public class GUI implements ActionListener{
 			
 			this.setText("SURPRISE MOTHERFUCKER");
 		 }
-		else
-			for(int i = 0; i<42;i++) {
-				if(e.getSource()==list[i]) {
-					list[i].setBackground(Color.GREEN);
-					changeLabelInt(labellist[i],1);
-			}
 		}
 	
 		
+
+	
+	public void nextPhase() {
+		for (int i=0;i<3;i++) {
+			phasenlist[i].setBackground(Color.white);
+			phasenlist[phase].setBackground(Color.green);
+		}
+
+	}
+	
+	public void nextPlayer() {
+		for (int i=0;i<playerlist.length;i++) {
+			playerlist[i].setBackground(Color.white);
+			playerlist[currentPlayer%playerlist.length].setBackground(colors[currentPlayer%playerlist.length]);
+		}
 	}
 
 	private void labelSetup(JButton[] button,JFrame frame) {
 		for(int i=0;i<button.length;i++) {
-			labellist[i]=(buildPlayerLabel(button[i].getX()+(button[i].getWidth()/2-15),button[i].getY()+button[i].getHeight(),"0",30,10));
+			labellist[i]=(buildPlayerLabel(button[i].getX()+(button[i].getWidth()/2-15),button[i].getY()+button[i].getHeight(),"1",30,10));
 			frame.add(labellist[i]);
 		}
 	}
-	private void changeLabelInt(JLabel c,int i) {
+	public void changeLabelInt(JLabel c,int i) {
 		c.setText(String.valueOf(i+Integer.parseInt(c.getText())));
 	}
 	public void setText(String text) {
 		textfeld.setText(text);
 	}
+
 
 }
 
