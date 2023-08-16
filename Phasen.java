@@ -9,7 +9,7 @@ import java.util.ArrayList;
 
 public class Phasen {
 
-	public static void main(String[] args) {
+	/*public void PhasenTests() {
 		// TODO Auto-generated method stub
 		//Test 1
 		Welt erde = new Welt();
@@ -86,10 +86,8 @@ public class Phasen {
 		
 		//Test 6
 		game.truppenverschiebung();
-		
-		
-		
-	}
+			
+	}*/
 	public Spieler aktiv;
 	private int phase;
 	public Welt erde;
