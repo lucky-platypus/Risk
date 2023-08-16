@@ -1,6 +1,9 @@
 package risiko;
 import java.util.ArrayList;
 
+import javax.swing.JButton;
+import javax.swing.JLabel;
+
 
 public class Land {
 	public int truppen;
@@ -8,6 +11,8 @@ public class Land {
 	public Spieler besetzer;
 	public ArrayList<Land> nachbar;
 	public boolean entdeckt;
+	public JButton button;
+	public JLabel label;
 	
 	Land(String l){
 		nachbar = new ArrayList<Land>();
@@ -22,7 +27,10 @@ public class Land {
 	}
 	
 	void verstaerken (int a) {
+		System.out.print(truppen);
 		truppen+=a;
+		System.out.print(truppen);
+		label.setText(String.valueOf(truppen));
 	}
 	
 	void verlust (int a) {
@@ -41,6 +49,7 @@ public class Land {
 	void setbesetzer(Spieler b, int t) {
 		besetzer = b;
 		truppen = t;
+		this.button.setBackground(b.color);
 	}
 	
 	String getname() {
