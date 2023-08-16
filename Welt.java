@@ -8,22 +8,29 @@ import java.io.FileNotFoundException;
 public class Welt {
 	public Land[] laender;
 	public Kontinent[] kontinente;
+	public GUI gui1;
 	
-	Welt (){
+	public Welt() {
+		
+	}
+	
+	Welt (GUI gui){
 		//Hier werden die Kontinente erzeugt und in einem Array gespeichert
 		laender = new Land[42];
 		kontinente = new Kontinent[6];
 		String gelesen;
 		BufferedReader lies;
-		
+		gui1=gui;
 		
 		//Hier werden die Länder erzeugt und in einem Array gespeichert
 		try {
-			lies = new BufferedReader(new FileReader("C:\\Users\\Lumia\\eclipse-workspace\\Risiko\\src\\risiko\\Laender.txt"));
+			lies = new BufferedReader(new FileReader("E:\\Laender.txt"));
 			for (int i =0;i<42;i++) {
 				try {
 					gelesen = lies.readLine();
 					laender[i] = new Land(gelesen);
+					laender[i].button = gui.list[i];
+					laender[i].label = gui.labellist[i];
 					switch(i) {
 					case 0,1,2,3,4,5,6,7,8:
 					}
@@ -39,7 +46,7 @@ public class Welt {
 		//Hier bekommen die Länder jeweils ihre Nachbarn
 		String zeile;
 		try {
-			lies = new BufferedReader(new FileReader("C:\\Users\\Lumia\\eclipse-workspace\\Risiko\\src\\risiko\\Nachbarn.txt"));
+			lies = new BufferedReader(new FileReader("E:\\Nachbarn.txt"));
 			for (int j =0;j<42;j++) {
 				try {
 					zeile = lies.readLine();
@@ -62,7 +69,7 @@ public class Welt {
 		}
 		//Hier werden die Kontinente erzeugt, bekommen ihre Länder und werden in einem Array gespeichert
 		try {
-			lies = new BufferedReader(new FileReader("C:\\Users\\Lumia\\eclipse-workspace\\Risiko\\src\\risiko\\Kontinente.txt"));
+			lies = new BufferedReader(new FileReader("E:\\Kontinente.txt"));
 			for(int k=0;k<6;k++) {
 				try {
 					kontinente[k] = new Kontinent(lies.readLine());
