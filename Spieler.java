@@ -1,5 +1,6 @@
 package risiko;
 
+import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Random;
@@ -12,6 +13,8 @@ public class Spieler {
 	public ArrayList<Karten> hand;
 	public int[] ergebnis;
 	public boolean eroberer;
+	public Color color;
+	public int truppen;
 	
 	
 	
@@ -70,25 +73,16 @@ public class Spieler {
 		
 	}
 	
-	void platzieren(int truppen) {
-		Land ziel;
-		Scanner scan = new Scanner(System.in);
-		int x = scan.nextInt();
-		while (truppen >0) {
-			//Land auswählen
-			ziel = landwahl();
+	void platzieren(int verstaerkung,Land land) {
+		Land ziel = land;
 			if (besetzt.contains(ziel)){
-				ziel.verstaerken(1);
-				truppen -=1;
+				ziel.verstaerken(verstaerkung);
+				truppen -= verstaerkung;
 			}else System.out.println("Das ist nicht dein Land");
 		}
-	}
+
 	
-	//Über gui
-	Land landwahl () {
-		Land ziel = new Land("placeholder");;
-		return ziel;
-	}
+
 	
 	void würfeln (int truppen, boolean verteidiger) {
 		int max;
@@ -104,6 +98,10 @@ public class Spieler {
 		}
 		Arrays.sort(ergebnis);
 	 }
+	Land landwahl () {
+		Land ziel = new Land("placeholder");;
+		return ziel;
+	}
 	
 	
 	
