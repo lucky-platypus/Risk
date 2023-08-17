@@ -212,6 +212,7 @@ public class Phasen {
 				weiter = false;
 				
 			} else if (verteidiger.truppen==0) {
+				defender.verloren(verteidiger);
 				System.out.println("der Angriff war erfolgreich");
 				verteidiger.setbesetzer(aktiv, atruppen);
 				aktiv.eroberer=true;
@@ -291,8 +292,15 @@ public class Phasen {
 				System.out.println("Wie viele Truppen sollen verschoben werden?");
 				System.out.println(von.truppen);
 				System.out.println(zu.truppen);
-
-				anzahl= Math.min(1,von.truppen-1 );
+				do {
+				try {
+					anzahl= Integer.parseInt(erde.gui1.textfeld2.getText());
+				} catch (NumberFormatException e) {
+					erde.gui1.textfeld.setText("Du musst ein Int eingeben");
+					anzahl= Math.max(1,von.truppen-1 );
+				}
+				}while (anzahl>=von.truppen);
+				
 			von.verlust(anzahl);
 			zu.verstaerken(anzahl);
 			scan1.close();

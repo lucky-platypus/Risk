@@ -15,6 +15,7 @@ public class actionlistener implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if(spiel.erde.gui1.phase==0) {
+			verlegt =false;
 			for(int i = 0;i<42;i++) {
 				if(e.getSource()== spiel.erde.gui1.list[i]) {
 					Land give = spiel.erde.laender[i];
@@ -56,6 +57,7 @@ public class actionlistener implements ActionListener {
 					if(e.getSource()== spiel.erde.gui1.list[i]) {
 						landausgewaehlt = false;
 						spiel.runde.truppenverschiebung(ausgewaehlt,spiel.erde.laender[i]);
+						verlegt=true;
 						ausgewaehlt=null;
 						//spiel.runde.endstep();
 					}
