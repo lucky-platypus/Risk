@@ -8,7 +8,7 @@ public class actionlistener implements ActionListener {
 	public int spieler = 0;
 	boolean landausgewaehlt= false;
 	boolean verlegt = false;
-	Land ausgewaehlt;
+	//Land ausgewaehlt, auchausgewaehlt;
 	public actionlistener(Spiel spiel1) {
 		spiel = spiel1;
 	}
@@ -29,7 +29,7 @@ public class actionlistener implements ActionListener {
 				for(int i = 0;i<42;i++) {
 					if(e.getSource()== spiel.erde.gui1.list[i]) {
 						if (spiel.erde.laender[i].besetzer==spiel.runde.aktiv) {
-							ausgewaehlt=spiel.erde.laender[i];
+							spiel.ausgewaehlt=spiel.erde.laender[i];
 							landausgewaehlt = true;
 						}else spiel.erde.gui1.setText("Das ist nicht dein Land");
 					}
@@ -38,8 +38,9 @@ public class actionlistener implements ActionListener {
 				for(int i = 0;i<42;i++) {
 					if(e.getSource()== spiel.erde.gui1.list[i]) {
 						landausgewaehlt = false;
-						spiel.runde.kampf(ausgewaehlt,spiel.erde.laender[i]);
-						ausgewaehlt=null;
+						spiel.auchausgewaehlt=spiel.erde.laender[i];
+						spiel.runde.kampf(spiel.ausgewaehlt,spiel.auchausgewaehlt);
+						
 					}
 			}
 			}
@@ -48,7 +49,7 @@ public class actionlistener implements ActionListener {
 			if (!landausgewaehlt&&!verlegt) {
 				for(int i = 0;i<42;i++) {
 					if(e.getSource()== spiel.erde.gui1.list[i]) {
-						ausgewaehlt=spiel.erde.laender[i];
+						spiel.ausgewaehlt=spiel.erde.laender[i];
 						landausgewaehlt = true;
 					}
 				}
@@ -56,9 +57,11 @@ public class actionlistener implements ActionListener {
 				for(int i = 0;i<42;i++) {
 					if(e.getSource()== spiel.erde.gui1.list[i]) {
 						landausgewaehlt = false;
-						spiel.runde.truppenverschiebung(ausgewaehlt,spiel.erde.laender[i]);
+						spiel.auchausgewaehlt=spiel.erde.laender[i];
+						spiel.runde.truppenverschiebung(spiel.ausgewaehlt,spiel.auchausgewaehlt);
 						verlegt=true;
-						ausgewaehlt=null;
+						spiel.ausgewaehlt=null;
+						spiel.auchausgewaehlt=null;
 						//spiel.runde.endstep();
 					}
 			}

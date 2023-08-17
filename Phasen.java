@@ -92,6 +92,7 @@ public class Phasen {
 	public Spieler aktiv;
 	private int phase;
 	public Welt erde;
+	public Spiel spiel;
 	public Deck deck;
 	public int anzahl;
 	
@@ -99,6 +100,10 @@ public class Phasen {
 		erde = a;
 		deck = b;
 		phase=0;	
+	}
+	
+	void setSpiel(Spiel c) {
+		spiel = c;
 	}
 	
 	void setaktiv(Spieler s) {
@@ -169,7 +174,6 @@ public class Phasen {
 		boolean weiter = true;
 		int atruppen, min;
 		Spieler defender = verteidiger.besetzer;
-		Scanner scan = new Scanner(System.in);
 		if (angreifer.nachbar.contains(verteidiger)) {
 			if (angreifer.besetzer != verteidiger.besetzer) {
 			}else {
@@ -181,21 +185,24 @@ public class Phasen {
 			weiter = false;
 		}
 		System.out.println("Um doch nicht anzugreifen drücken Sie jetzt die 1");
+		if (angreifer.truppen==1)return;
 		do {
 			System.out.println("Mit wievielen Truppen möchtest du angreifen?");
-			atruppen = Math.min(3,angreifer.truppen-1);
-			scan.close();
+			try {
+				atruppen= Integer.parseInt(erde.gui1.textfeld2.getText());
+			} catch (NumberFormatException e) {
+				erde.gui1.textfeld.setText("Du musst ein Int eingeben");
+				atruppen= Math.max(1,angreifer.truppen-1 );
+			}
 		}while (atruppen >=angreifer.truppen);
-		angreifer.verlust(atruppen);
-		System.out.print("Ich");
+		if (weiter)angreifer.verlust(atruppen);
 		while (weiter) {
+			weiter =false;
 			aktiv.würfeln(atruppen, false);
 			defender.würfeln(verteidiger.truppen, true);
-			System.out.print("bin");
 			min = 3- Math.min(2,Math.min(atruppen, verteidiger.truppen));
 			for(int i = 2; i>= min ;i--) {
 				System.out.print(aktiv.ergebnis[i]);
-				System.out.print("dein");
 				System.out.print(" vs ");
 				System.out.println(defender.ergebnis[i]);
 				if (aktiv.ergebnis[i]>defender.ergebnis[i]){
@@ -203,28 +210,30 @@ public class Phasen {
 				}else if (aktiv.ergebnis[i]<=defender.ergebnis[i]) {
 					atruppen-=1;
 				}else System.out.println("Wie bin ich denn bitte hier gelandet?");
-				System.out.print("vater");
 				
 			}
 			anzeigen(verteidiger, atruppen);
 			if (atruppen==0) {
-				System.out.println("Der Angriff ist fehlgeschlagen");
+				erde.gui1.textfeld.setText("Der Angriff ist fehlgeschlagen");
 				weiter = false;
+				spiel.ausgewaehlt=null;
+				spiel.auchausgewaehlt=null;
 				
 			} else if (verteidiger.truppen==0) {
 				defender.verloren(verteidiger);
-				System.out.println("der Angriff war erfolgreich");
+				erde.gui1.textfeld.setText("der Angriff war erfolgreich");
 				verteidiger.setbesetzer(aktiv, atruppen);
 				aktiv.eroberer=true;
 				aktiv.erobert(verteidiger);
 				weiter =false;
+				spiel.ausgewaehlt=null;
+				spiel.auchausgewaehlt=null;
 			}else {
-				System.out.println("Soll der Angriff abgebrochen werden?");
+				angreifer.verstaerken(atruppen);
+				erde.gui1.textfeld2.setText(Integer.toString(atruppen));
+				//erde.gui1.textfeld.setText("Soll der Angriff fortgesetzt werden?");
+				erde.step=1;
 				
-				/*if (scan.nextInt()==1) {
-					weiter =false;
-					angreifer.verstaerken(atruppen);
-				}*/
 				
 			}
 		}
@@ -235,16 +244,20 @@ public class Phasen {
 	
 	void anzeigen (Land v, int atruppen)
 	 {
+		String str;
+		str="Ergebnisse: \nAngreifer:";
+		
 		 System.out.println("Ergebnisse:");
 		 System.out.print("Angreifer:    ");
 		 //for (int i = aktiv.ergebnis.length - 1; i >= 3-Math.min(atruppen,3); i--)
 		 for (int i = aktiv.ergebnis.length - 1; i >= 0; i--)
-			    System.out.print(aktiv.ergebnis[i] + " "); 
+			 str+=(aktiv.ergebnis[i] + " "); 
+		 str+="\nVerteidiger:  ";
 		 System.out.println("");
 		 System.out.print("Verteidiger:  ");
 		 //for (int i = v.besetzer.ergebnis.length - 1; i >= 2-Math.min(v.truppen, 2); i--)
 		 for (int i = v.besetzer.ergebnis.length - 1; i >= 0; i--)
-			    System.out.print(v.besetzer.ergebnis[i] + " "); 
+			 str+=(v.besetzer.ergebnis[i] + " "); 
 		 System.out.println("");
 		 System.out.print("Der Angreifer hat noch ");
 		 System.out.print(atruppen);
@@ -252,6 +265,13 @@ public class Phasen {
 		 System.out.print("Der Verteidiger hat noch ");
 		 System.out.print(v.truppen);
 		 System.out.println(" Truppen");
+		 str+="\nDer Angreifer hat noch ";
+		 str+=atruppen;
+		 str+=" Truppen \nDer Verteidiger hat noch ";
+		 str+=v.truppen;
+		 str+=" Truppen \nAngriff fortgesetzt ?";
+		 erde.gui1.textfeld.setText(str);
+		 
 		 
 		 
 		 

@@ -16,6 +16,7 @@ public class Spiel {
 	public int anderreihe;
 	public int players;
 	public Phasen runde;
+	public Land ausgewaehlt, auchausgewaehlt;
 	ArrayList<Spieler> spielende;
 	Color colors[] = {Color.red,Color.green,Color.blue,Color.yellow,Color.ORANGE,Color.MAGENTA};
 	Welt erde = new Welt();

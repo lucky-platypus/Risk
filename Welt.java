@@ -9,7 +9,7 @@ public class Welt {
 	public Land[] laender;
 	public Kontinent[] kontinente;
 	public GUI gui1;
-	
+	public int step;
 	public Welt() {
 		
 	}

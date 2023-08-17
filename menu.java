@@ -97,6 +97,9 @@ public class menu implements ActionListener {
 			deck = new Deck();
 			runde = new Phasen(welt, deck);
 			spiel = new Spiel(this.getPlayerCount(),0,welt, runde);
+			runde.setSpiel(spiel);
+			
+			
 			
 			
 			gui.setRunde(runde);
