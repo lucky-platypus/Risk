@@ -1,15 +1,15 @@
 package risiko;
 
 public class menue {
-	
+
 	menue(){
-		
+
 	}
 
 	int getplayercount() {
-		return 3;
+		return 4;
 	}
-	
+
 	int getbots() {
 		return 2;
 	}

@@ -24,7 +24,7 @@ public class Welt {
 		
 		//Hier werden die Länder erzeugt und in einem Array gespeichert
 		try {
-			lies = new BufferedReader(new FileReader("E:\\Laender.txt"));
+			lies = new BufferedReader(new FileReader(".\\Laender.txt"));
 			for (int i =0;i<42;i++) {
 				try {
 					gelesen = lies.readLine();
@@ -46,7 +46,7 @@ public class Welt {
 		//Hier bekommen die Länder jeweils ihre Nachbarn
 		String zeile;
 		try {
-			lies = new BufferedReader(new FileReader("E:\\Nachbarn.txt"));
+			lies = new BufferedReader(new FileReader(".\\Nachbarn.txt"));
 			for (int j =0;j<42;j++) {
 				try {
 					zeile = lies.readLine();
@@ -69,7 +69,7 @@ public class Welt {
 		}
 		//Hier werden die Kontinente erzeugt, bekommen ihre Länder und werden in einem Array gespeichert
 		try {
-			lies = new BufferedReader(new FileReader("E:\\Kontinente.txt"));
+			lies = new BufferedReader(new FileReader(".\\Kontinente.txt"));
 			for(int k=0;k<6;k++) {
 				try {
 					kontinente[k] = new Kontinent(lies.readLine());

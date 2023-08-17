@@ -3,13 +3,13 @@ package risiko;
 public class Karten {
 	public String land;
 	public int typ;
-	
-	
+
+
 	Karten(String l, int t){
 		land = l;
 		typ = t%3;
 	}
-	
+
 	void ansagen () {
 		System.out.print(land);
 		System.out.print("---");
@@ -23,5 +23,5 @@ public class Karten {
 			System.out.println("Modulo verkackt");
 		}
 	}
-	
+
 }

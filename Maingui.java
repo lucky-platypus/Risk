@@ -1,4 +1,4 @@
-package gui;
+package risiko;
 import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -13,12 +13,12 @@ import java.io.IOException;
 
 public class Maingui {
 
-	public static void main(String[] args) throws IOException {  
+	public static void main(String[] args) throws IOException {
 
 
 
 	menu menu = new menu();
 
-	
+
 	}
 }

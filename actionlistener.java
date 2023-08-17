@@ -6,28 +6,81 @@ import java.awt.event.ActionListener;
 public class actionlistener implements ActionListener {
 	public Spiel spiel;
 	public int spieler = 0;
+	boolean landausgewaehlt= false;
+	boolean verlegt = false;
+	Land ausgewaehlt;
 	public actionlistener(Spiel spiel1) {
 		spiel = spiel1;
 	}
 	@Override
 	public void actionPerformed(ActionEvent e) {
-
-		for(int i = 0;i<42;i++) {
-			if(e.getSource()== spiel.erde.gui1.list[i]) {
-				Land give = spiel.erde.laender[i];
-				if (spiel.spielende.get(spieler).besetzt.contains(give) && spiel.spielende.get(i%spiel.players).truppen>0) {
-					spiel.spielende.get(spieler).platzieren(3,give);
-					spieler = (spieler+1)%spiel.players;
-					spiel.erde.gui1.currentPlayer++;
-					spiel.erde.gui1.nextPlayer();
+		if(spiel.erde.gui1.phase==0) {
+			for(int i = 0;i<42;i++) {
+				if(e.getSource()== spiel.erde.gui1.list[i]) {
+					Land give = spiel.erde.laender[i];
+					spiel.runde.aktiv.platzieren(1, give,spiel.runde.anzahl);
+					spiel.runde.anzahl-=1;
 				}
-				else if(spiel.spielende.get(spieler).besetzt.contains(give)) {
-					
-				}
-				else {
-					System.out.println("Das ist nicht dein Land");
-				}
+			}
 		}
+		else if(spiel.erde.gui1.phase==1){
+			if (!landausgewaehlt) {
+				for(int i = 0;i<42;i++) {
+					if(e.getSource()== spiel.erde.gui1.list[i]) {
+						if (spiel.erde.laender[i].besetzer==spiel.runde.aktiv) {
+							ausgewaehlt=spiel.erde.laender[i];
+							landausgewaehlt = true;
+						}else spiel.erde.gui1.setText("Das ist nicht dein Land");
+					}
+				}
+			}else if (landausgewaehlt){
+				for(int i = 0;i<42;i++) {
+					if(e.getSource()== spiel.erde.gui1.list[i]) {
+						landausgewaehlt = false;
+						spiel.runde.kampf(ausgewaehlt,spiel.erde.laender[i]);
+						ausgewaehlt=null;
+					}
+			}
+			}
+		}
+		else if(spiel.erde.gui1.phase==2){
+			if (!landausgewaehlt&&!verlegt) {
+				for(int i = 0;i<42;i++) {
+					if(e.getSource()== spiel.erde.gui1.list[i]) {
+						ausgewaehlt=spiel.erde.laender[i];
+						landausgewaehlt = true;
+					}
+				}
+			}else if (landausgewaehlt&&!verlegt){
+				for(int i = 0;i<42;i++) {
+					if(e.getSource()== spiel.erde.gui1.list[i]) {
+						landausgewaehlt = false;
+						spiel.runde.truppenverschiebung(ausgewaehlt,spiel.erde.laender[i]);
+						ausgewaehlt=null;
+						//spiel.runde.endstep();
+					}
+			}
+			}
+		}
+		else {
+			for(int i = 0;i<42;i++) {
+				if(e.getSource()== spiel.erde.gui1.list[i]) {
+					Land give = spiel.erde.laender[i];
+					if (spiel.spielende.get(spieler).besetzt.contains(give) && spiel.spielende.get(spieler).truppen>0) {
+						spiel.spielende.get(spieler).platzieren(5,give,10);
+						spieler = (spieler+1)%spiel.players;
+						spiel.erde.gui1.currentPlayer=spieler;
+						spiel.erde.gui1.nextPlayer();
+						spiel.erde.gui1.textfeld.setText("");
+					}
+					else if(spiel.spielende.get(spieler).besetzt.contains(give)) {
+						spiel.erde.gui1.textfeld.setText("keine truppen mehr");
+					}
+					else {
+						spiel.erde.gui1.textfeld.setText("Das ist nicht dein land");
+						
+					}
+				}
 
 
 		}
@@ -36,3 +89,4 @@ public class actionlistener implements ActionListener {
 
 }
 }
+	}

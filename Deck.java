@@ -21,7 +21,7 @@ public class Deck {
 		Karten temp;
 		BufferedReader lies;
 			try {
-				lies = new BufferedReader(new FileReader("C:\\Users\\Lumia\\eclipse-workspace\\Risiko\\src\\risiko\\Laender.txt"));
+				lies = new BufferedReader(new FileReader(".\\Laender.txt"));
 				for (int i =0;i<42;i++) {
 					try {
 						temp = new Karten(lies.readLine(), i);

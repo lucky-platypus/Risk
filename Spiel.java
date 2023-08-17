@@ -7,6 +7,8 @@ import java.util.ArrayList;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
 import java.io.*;
+import java.awt.event.ActionEvent;
+
 
 public class Spiel {
 	public boolean gewinner;
@@ -17,14 +19,15 @@ public class Spiel {
 	ArrayList<Spieler> spielende;
 	Color colors[] = {Color.red,Color.green,Color.blue,Color.yellow,Color.ORANGE,Color.MAGENTA};
 	Welt erde = new Welt();
-	
-	Spiel (int play,int bots,Welt welt){
+
+	Spiel (int play,int bots,Welt welt, Phasen x){
 		spielende = new ArrayList<Spieler>();
 		Spieler player;
 		anderreihe =0;
 		gewinner =false;
 		players=play;
 		erde = welt;
+		runde =x;
 		for(int i=0; i<players;i++) {
 			if (i<players-bots) {
 				player = new Spieler (true);
@@ -51,27 +54,25 @@ public class Spiel {
 			dran+=1;
 			if (dran>=spielende.size()) dran=0;
 		}
-		
+
 	}
-	
-	void Runde(){
-		runde.setaktiv(spielende.get(anderreihe));
-		phase =1;
-		runde.verstaerkung();
-		phase =2;
-		runde.kampfphase();
-		if (spielende.get(anderreihe).hatgewonnen()) {
-			gewinner =true;
-			return;
-		}else {
-			phase =3;
-			runde.truppenverschiebung();
-			anderreihe+=1;
-			if(anderreihe>=spielende.size()) {
-				anderreihe =0;
+
+	void Runde(int phase){
+		runde.setaktiv(spielende.get(erde.gui1.currentPlayer));
+		if (phase ==0) {
+			runde.verstaerkung();
+		}else if (phase==1) {
+			//runde.kampfphase();
+			if (spielende.get(anderreihe).hatgewonnen()) {
+				gewinner =true;
+				return;
 			}
-		}
-		
+		}else if (phase==2) {
+			//runde.truppenverschiebung();
+			runde.endstep();
+		}else System.out.println("nope");
+
+
 	}
 	void truppenverteilung (Welt erde){
 		int verteilbar;
@@ -82,12 +83,11 @@ public class Spiel {
 		actionlistener lis = new actionlistener(this);
 		for(int i = 0; i <42;i++) {
 			erde.gui1.list[i].addActionListener(lis);
-  
+
 		}
 
 			verteilbar -=1;
 			}
 
-		 
+
 	}
-	

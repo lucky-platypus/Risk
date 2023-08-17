@@ -24,6 +24,11 @@ public class menu implements ActionListener {
 	public double X[]= {1920,1920,1280,1280};
 	public double Y[]= {1200,1080,800,720};
 	
+	public Welt welt;
+	public Spiel spiel;
+	public Deck deck;
+	public Phasen runde;
+	
 	private int playerCount;
 	@Override
 	public void actionPerformed(ActionEvent e) {
@@ -88,12 +93,17 @@ public class menu implements ActionListener {
 	
 		public void spielSetup() throws IOException{
 			GUI gui =new GUI(this.aufloesungX,this.aufloesungX,this.playerCount);
-			Welt welt = new Welt(gui);
-			Spiel spiel = new Spiel(this.getPlayerCount(),0,welt);
+			welt = new Welt(gui);
+			deck = new Deck();
+			runde = new Phasen(welt, deck);
+			spiel = new Spiel(this.getPlayerCount(),0,welt, runde);
+			
+			
+			gui.setRunde(runde);
+			gui.setSpiel(spiel);
 			spiel.landverteilung(welt);
 			spiel.truppenverteilung(welt);
 		}
 		
 	}
 	
-

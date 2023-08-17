@@ -13,45 +13,43 @@ public class Land {
 	public boolean entdeckt;
 	public JButton button;
 	public JLabel label;
-	
+
 	Land(String l){
 		nachbar = new ArrayList<Land>();
 		name = l;
 		truppen =0;
-		
-		
-		
+
+
+
 	}
 	ArrayList<Land> nachbarschaft(){
 		return nachbar;
 	}
-	
+
 	void verstaerken (int a) {
-		System.out.print(truppen);
-		truppen+=a;
-		System.out.print(truppen);
+		truppen+=a;;
 		label.setText(String.valueOf(truppen));
 	}
-	
+
 	void verlust (int a) {
-		if (truppen>a) {
+		if (truppen>=a) {
 			truppen -=a;
-		}else if (truppen == a){
-			truppen -=a;
+			label.setText(String.valueOf(truppen));
 		}else System.out.println("Fehler, zu wenig Truppen vorhanden");
-		
+
 	}
-	
+
 	void addnachbar(Land a) {
 		nachbar.add(a);
 	}
-	
+
 	void setbesetzer(Spieler b, int t) {
 		besetzer = b;
 		truppen = t;
+		label.setText(String.valueOf(truppen));
 		this.button.setBackground(b.color);
 	}
-	
+
 	String getname() {
 		return name;
 	}

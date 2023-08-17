@@ -29,11 +29,11 @@ public class GUI implements ActionListener{
 		JLabel labellist[] =new JLabel[42];
 		JLabel playerlist[] = new JLabel[0];
 		JLabel phasenlist[] = new JLabel[3];
-		
+
 		private int x[] = {150,280,560,280,400,490,280,400,310,400,420,520,450,670,790,910,650,660,800,810,
 			720,830,820,900,830,960,1040,1140,1250,1370,1230,1230,1020,1200,1380,930,
 			1090,1200,1200,1350,1270,1390};
-		
+
 		private int y[] = {200,180,150,270,293,290,370,400,480,570,680,640,765,250,220,300,360,480,360,420,
 			615,580,725,670,810,830,280,220,170,180,295,370,400,470,370,500,510,560,700,
 			680,830,800};
@@ -44,29 +44,31 @@ public class GUI implements ActionListener{
 
 		private int height[] = {30,50,30,30,30,30,40,40,40,30,30,30,30,30,30,30,40,40,40,40,30,30,
 			30,30,60,40,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,50,30,30};
-		
+
 		Color colors[] = {Color.red,Color.green,Color.blue,Color.yellow,Color.ORANGE,Color.MAGENTA};
-		
+
         JButton nextturn=new JButton();
         JTextArea textfeld = new JTextArea();
-        
-        public int currentPlayer=0;
-        private int phase = 0;
-        private int chooseLand= 100;
-        
-        
-	public GUI(double scaleX,double scaleY,int playerCount) throws IOException {
-		
 
-    	
+        public int currentPlayer=0;
+        public int phase = 30;
+        private int chooseLand= 100;
+        public Phasen phasen;
+        public Spiel game;
+
+
+	public GUI(double scaleX,double scaleY,int playerCount) throws IOException {
+
+
+
 		playerlist = new JLabel[playerCount];
-		
+
         JFrame frame = buildFrame(scaleX,scaleY);
 
         final BufferedImage image = ImageIO.read(new File(".\\Welt.jpg"));
-        
+
         buttonSetup(frame,scaleX,scaleY);
-	
+
 
         JPanel pane = new JPanel() {
             @Override
@@ -77,7 +79,7 @@ public class GUI implements ActionListener{
         };
 
 
-        
+
         for(int i=0; i<playerCount;i++) {
         	playerlist[i] = (buildPlayerLabel((int)(1720*scaleX),(int)((i*50+5)*scaleY),"Player"+(i+1), 100, 50));
         	frame.add(playerlist[i]);
@@ -86,29 +88,29 @@ public class GUI implements ActionListener{
         	phasenlist[i] = (buildPlayerLabel((int)(1720*scaleX),(int)((((i*50)+5)+305)*scaleY),"Phase"+(i+1), 100, 50));
         	frame.add(phasenlist[i]);
         }
-        
+
         labelSetup(list,frame);
-        
+
         nextturn.setBounds((int)(1640*scaleX),(int)(1005*scaleY),(int)(260*scaleX),(int)(130*scaleY));
         nextturn.setText("weiter");
         nextturn.setVisible(true);
         nextturn.addActionListener(this);
-        
+
         textfeld.setBounds((int)(1640*scaleX),(int)(scaleY*500),(int)(260*scaleX),(int)(500*scaleY));
         textfeld.setLineWrap(true);
         textfeld.setWrapStyleWord(true);
         textfeld.setText("default");
         textfeld.setBorder(new LineBorder(Color.BLACK,3));
-       
-        kartenGraph karte = new kartenGraph(10,1020,40,40,"fick","dich");
-        
-        frame.add(karte);
+
+        //kartenGraph karte = new kartenGraph(10,1020,40,40,"fick","dich");
+
+        //frame.add(karte);
         frame.add(nextturn);
         frame.add(textfeld);
         frame.add(pane);
         frame.setVisible(true);
 		nextPlayer();
- 
+
     }
 
 
@@ -129,7 +131,7 @@ public class GUI implements ActionListener{
         button.setBackground(Color.gray);
         button.setText(name);
         return button;
-    	
+
     }
     private static JLabel buildPlayerLabel(int x, int y, String name,int withd,int height) {
         JLabel label = new JLabel();
@@ -140,11 +142,18 @@ public class GUI implements ActionListener{
         label.setBackground(Color.white);
         return label;
     }
-    
+
+    public void setRunde(Phasen phase) {
+    	phasen = phase;
+    }
+    public void setSpiel (Spiel spiel) {
+    	game =spiel;
+    }
+
     private void buttonSetup(JFrame frame,double xScaling,double yScaling) {
         BufferedReader lies;
 		try {
-			lies = new BufferedReader(new FileReader("E:\\Laender_html.txt"));
+			lies = new BufferedReader(new FileReader(".\\Laender_html.txt"));
 			for (int i =0;i<42;i++) {
 				try {
 		        	list[i]= buildButton((int)(x[i]*xScaling),(int)(y[i]*yScaling),lies.readLine(),(int)(withd[i]*xScaling*1.05),(int)(height[i]*yScaling*1.1),(int)(11*(yScaling)));
@@ -163,29 +172,39 @@ public class GUI implements ActionListener{
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		 if(e.getSource() == nextturn) {
-			this.nextPhase();
-			this.nextPlayer();
-			phase =(phase+3+1)%3;
-			if (phase == 0) {
-				
-				currentPlayer =(currentPlayer+playerlist.length+1)%playerlist.length;
-			}
-			
-			this.setText("SURPRISE MOTHERFUCKER");
-		 }
-		}
-	
-		
+			if(phase==30) {
+				phase=0;
+				this.nextPhase();
+				this.nextPlayer();
 
+			}else {
+				phase =(phase+1)%3;}
 	
+				game.Runde(phase);
+				this.nextPhase();
+				this.nextPlayer();
+				if (phase == 2) {
+
+					currentPlayer =(currentPlayer+1)%playerlist.length;
+				}
+				this.setText("SURPRISE MOTHERFUCKER");
+				System.out.print(phase);
+
+			}
+		 }
+	
+
+
+
+
 	public void nextPhase() {
 		for (int i=0;i<3;i++) {
 			phasenlist[i].setBackground(Color.white);
-			phasenlist[phase].setBackground(Color.green);
+			phasenlist[phase%3].setBackground(Color.gray);
 		}
 
 	}
-	
+
 	public void nextPlayer() {
 		for (int i=0;i<playerlist.length;i++) {
 			playerlist[i].setBackground(Color.white);
@@ -208,4 +227,3 @@ public class GUI implements ActionListener{
 
 
 }
-

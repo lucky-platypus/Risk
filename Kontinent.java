@@ -6,18 +6,18 @@ public class Kontinent {
 	public String name;
 	public ArrayList<Land> enthalten;
 	public int wert;
-	
+
 	Kontinent(String n){
 		name = n;
 		enthalten = new ArrayList<Land>();
 	}
-	
-	
+
+
 	void addLand (Land l) {
 		enthalten.add(l);
-		
+
 	}
-	
+
 	int Kontinentkontrolle(Spieler aktiv) {
 		int b =0;
 		int i =0;
@@ -31,7 +31,7 @@ public class Kontinent {
 		if (kontrolliert) b+=wert;
 		return b;
 	}
-	
-	
-	
+
+
+
 }

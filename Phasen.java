@@ -6,6 +6,7 @@ import java.util.Scanner;
 //import combat.Spieler;
 
 import java.util.ArrayList;
+import java.util.InputMismatchException;
 
 public class Phasen {
 
@@ -92,6 +93,7 @@ public class Phasen {
 	private int phase;
 	public Welt erde;
 	public Deck deck;
+	public int anzahl;
 	
 	Phasen(Welt a, Deck b){
 		erde = a;
@@ -105,8 +107,9 @@ public class Phasen {
 	}
 	//Verstärkungen fragt erst ob Karten getauscht werden, dann Gibt es pro 3 Gebiete eine Einheite, dann für jeden Kontinent
 	void verstaerkung() {
-		int anzahl=0;
+		anzahl=0;
 		boolean ja=false;
+		Land land;
 		Karten a,b,c;
 		do {
 			System.out.println((aktiv.hand.size()));
@@ -136,12 +139,13 @@ public class Phasen {
 		System.out.print("Du bekommst ");
 		System.out.print(anzahl);
 		System.out.println(" Verstärkungen");
-		//aktiv.platzieren(anzahl);
+
+			}
 
 		
-	}
+
 	
-	void kampfphase() {
+	/*void kampfphase() {
 		Land von, zu;
 		boolean tiptop = false;
 		do {
@@ -157,7 +161,7 @@ public class Phasen {
 		} while (!tiptop);
 		kampf (von, zu);
 		
-	}
+	}*/
 	
 	
 	
@@ -166,18 +170,32 @@ public class Phasen {
 		int atruppen, min;
 		Spieler defender = verteidiger.besetzer;
 		Scanner scan = new Scanner(System.in);
+		if (angreifer.nachbar.contains(verteidiger)) {
+			if (angreifer.besetzer != verteidiger.besetzer) {
+			}else {
+				System.out.println("Du kannst nicht dein eigenes Land angfreifen mkay?");
+				weiter=false;
+			}
+		}else {
+			System.out.println("Flugzeuge wurden noch nicht erfunden");
+			weiter = false;
+		}
+		System.out.println("Um doch nicht anzugreifen drücken Sie jetzt die 1");
 		do {
 			System.out.println("Mit wievielen Truppen möchtest du angreifen?");
-			
-			atruppen = scan.nextInt();
+			atruppen = Math.min(3,angreifer.truppen-1);
+			scan.close();
 		}while (atruppen >=angreifer.truppen);
 		angreifer.verlust(atruppen);
+		System.out.print("Ich");
 		while (weiter) {
 			aktiv.würfeln(atruppen, false);
 			defender.würfeln(verteidiger.truppen, true);
+			System.out.print("bin");
 			min = 3- Math.min(2,Math.min(atruppen, verteidiger.truppen));
 			for(int i = 2; i>= min ;i--) {
 				System.out.print(aktiv.ergebnis[i]);
+				System.out.print("dein");
 				System.out.print(" vs ");
 				System.out.println(defender.ergebnis[i]);
 				if (aktiv.ergebnis[i]>defender.ergebnis[i]){
@@ -185,6 +203,7 @@ public class Phasen {
 				}else if (aktiv.ergebnis[i]<=defender.ergebnis[i]) {
 					atruppen-=1;
 				}else System.out.println("Wie bin ich denn bitte hier gelandet?");
+				System.out.print("vater");
 				
 			}
 			anzeigen(verteidiger, atruppen);
@@ -200,15 +219,16 @@ public class Phasen {
 				weiter =false;
 			}else {
 				System.out.println("Soll der Angriff abgebrochen werden?");
-				if (scan.nextInt()==1) {
+				
+				/*if (scan.nextInt()==1) {
 					weiter =false;
 					angreifer.verstaerken(atruppen);
-				}
+				}*/
 				
 			}
 		}
 			
-			
+
 			
 	}
 	
@@ -237,18 +257,14 @@ public class Phasen {
 	 }
 	
 	
-	void truppenverschiebung() {
-		Land von,zu,über;
+	void truppenverschiebung(Land von,Land zu) {
+		Land über;
 		int anzahl, j;
 		boolean verbunden = false;
-		Scanner scan = new Scanner(System.in);
+		Scanner scan1 = new Scanner(System.in);
 		//Hier Abfrage ob man überhaupt verschieben will
 		//do {
 			ArrayList<Land> kopf = new ArrayList<Land>();
-			//von = aktiv.landwahl();
-			von = erde.laender[2];
-			//zu=aktiv.landwahl();
-			zu = erde.laender[3];
 			kopf.add(von);
 			for (int i=0; i< 42;i++) {
 				erde.laender[i].entdeckt=false;
@@ -272,17 +288,30 @@ public class Phasen {
 		//}while (!verbunden&&j<17);
 		
 		if(verbunden) {
-			do {
 				System.out.println("Wie viele Truppen sollen verschoben werden?");
-				anzahl = scan.nextInt();
-			} while (anzahl>von.truppen-1);
-			von.truppen-=anzahl;
-			zu.truppen+=anzahl;
+				System.out.println(von.truppen);
+				System.out.println(zu.truppen);
+
+				anzahl= Math.min(1,von.truppen-1 );
+			von.verlust(anzahl);
+			zu.verstaerken(anzahl);
+			scan1.close();
+			for(int i =0; i<kopf.size();i++) {
+				kopf.get(i).entdeckt = true;
+			}
 		}
-		scan.close();
-		
 	}
 	
+	
+	
+	
+	
+	void endstep(){
+		if (aktiv.eroberer) {
+			deck.austeilen(aktiv);
+			aktiv.eroberer=false;
+		}
+	}
 	
 	
 }

@@ -73,11 +73,13 @@ public class Spieler {
 		
 	}
 	
-	void platzieren(int verstaerkung,Land land) {
+	void platzieren(int verstaerkung,Land land,int test) {
 		Land ziel = land;
 			if (besetzt.contains(ziel)){
-				ziel.verstaerken(verstaerkung);
-				truppen -= verstaerkung;
+				if(test>0){
+					ziel.verstaerken(verstaerkung);
+					truppen -= verstaerkung;
+				}
 			}else System.out.println("Das ist nicht dein Land");
 		}
 
