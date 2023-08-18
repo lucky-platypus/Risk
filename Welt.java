@@ -18,7 +18,7 @@ public class Welt {
 		//Hier werden die Kontinente erzeugt und in einem Array gespeichert
 		laender = new Land[42];
 		kontinente = new Kontinent[6];
-		String gelesen;
+		String gelesen, zeile;
 		BufferedReader lies;
 		gui1=gui;
 		
@@ -44,7 +44,7 @@ public class Welt {
 			e.printStackTrace();
 		}
 		//Hier bekommen die Länder jeweils ihre Nachbarn
-		String zeile;
+
 		try {
 			lies = new BufferedReader(new FileReader(".\\Nachbarn.txt"));
 			for (int j =0;j<42;j++) {

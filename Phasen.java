@@ -95,6 +95,7 @@ public class Phasen {
 	public Spiel spiel;
 	public Deck deck;
 	public int anzahl;
+
 	
 	Phasen(Welt a, Deck b){
 		erde = a;
@@ -190,6 +191,7 @@ public class Phasen {
 			System.out.println("Mit wievielen Truppen möchtest du angreifen?");
 			try {
 				atruppen= Integer.parseInt(erde.gui1.textfeld2.getText());
+				if (atruppen>=angreifer.truppen)atruppen=angreifer.truppen-1;
 			} catch (NumberFormatException e) {
 				erde.gui1.textfeld.setText("Du musst ein Int eingeben");
 				atruppen= Math.max(1,angreifer.truppen-1 );
@@ -315,6 +317,7 @@ public class Phasen {
 				do {
 				try {
 					anzahl= Integer.parseInt(erde.gui1.textfeld2.getText());
+					if (anzahl>=von.truppen) anzahl=von.truppen-1;
 				} catch (NumberFormatException e) {
 					erde.gui1.textfeld.setText("Du musst ein Int eingeben");
 					anzahl= Math.max(1,von.truppen-1 );

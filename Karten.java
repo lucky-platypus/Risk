@@ -3,10 +3,12 @@ package risiko;
 public class Karten {
 	public String land;
 	public int typ;
+	int position;
 
 
 	Karten(String l, int t){
 		land = l;
+		position =t;
 		typ = t%3;
 	}
 

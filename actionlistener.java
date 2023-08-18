@@ -14,6 +14,7 @@ public class actionlistener implements ActionListener {
 	}
 	@Override
 	public void actionPerformed(ActionEvent e) {
+		System.out.println("Klick");
 		if(spiel.erde.gui1.phase==0) {
 			verlegt =false;
 			for(int i = 0;i<42;i++) {
@@ -27,6 +28,7 @@ public class actionlistener implements ActionListener {
 		else if(spiel.erde.gui1.phase==1){
 			if (!landausgewaehlt) {
 				for(int i = 0;i<42;i++) {
+					
 					if(e.getSource()== spiel.erde.gui1.list[i]) {
 						if (spiel.erde.laender[i].besetzer==spiel.runde.aktiv) {
 							spiel.ausgewaehlt=spiel.erde.laender[i];
@@ -75,6 +77,7 @@ public class actionlistener implements ActionListener {
 						spiel.spielende.get(spieler).platzieren(5,give,10);
 						spieler = (spieler+1)%spiel.players;
 						spiel.erde.gui1.currentPlayer=spieler;
+						System.out.println(spiel.erde.gui1.currentPlayer+"Hierbinichactionlisteneractionperformed");
 						spiel.erde.gui1.nextPlayer();
 						spiel.erde.gui1.textfeld.setText("");
 					}

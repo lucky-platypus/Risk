@@ -48,12 +48,13 @@ public class GUI implements ActionListener{
 		Color colors[] = {Color.red,Color.green,Color.blue,Color.yellow,Color.ORANGE,Color.MAGENTA};
 
         JButton nextturn=new JButton();
+        JButton savegame=new JButton();
         JButton ja = new JButton();
         JButton nein = new JButton();
         JTextArea textfeld = new JTextArea();
         JTextArea textfeld2 = new JTextArea();
 
-        public int currentPlayer=0;
+        public int currentPlayer;
         public int phase = 30;
         private int chooseLand= 100;
         public Phasen phasen;
@@ -94,10 +95,17 @@ public class GUI implements ActionListener{
 
         labelSetup(list,frame);
 
-        nextturn.setBounds((int)(1640*scaleX),(int)(1005*scaleY),(int)(260*scaleX),(int)(130*scaleY));
+        nextturn.setBounds((int)(1640*scaleX),(int)(1010*scaleY),(int)(260*scaleX),(int)(130*scaleY));
         nextturn.setText("weiter");
         nextturn.setVisible(true);
         nextturn.addActionListener(this);
+        
+        savegame.setBounds((int)(1420*scaleX),(int)(1010*scaleY),(int)(200*scaleX),(int)(130*scaleY));
+        savegame.setText("Speichern");
+        savegame.setVisible(true);
+        savegame.addActionListener(this);
+        
+        
         
         ja.setBounds((int)(1640*scaleX),(int)(900*scaleY),(int)(125*scaleX),(int)(100*scaleY));
         ja.setText("JA");
@@ -126,6 +134,7 @@ public class GUI implements ActionListener{
         //kartenGraph karte = new kartenGraph(10,1020,40,40,"fick","dich");
 
         //frame.add(karte);
+        frame.add(savegame);
         frame.add(nextturn);
         frame.add(ja);
         frame.add(nein);
@@ -199,13 +208,14 @@ public class GUI implements ActionListener{
 			 spiel.erde.step=0;
 			if(phase==30) {
 				phase=0;
+				System.out.println(spiel.erde.gui1.currentPlayer+"HierbinichGUIactionperformed30");
 				currentPlayer=0;
 				this.nextPhase();
 				this.nextPlayer();
 
 			}else {
 				phase =(phase+1)%3;}
-	
+			System.out.println(spiel.erde.gui1.currentPlayer+"HierbinichGUIactionperformed");
 				spiel.Runde(phase);
 				this.nextPhase();
 				this.nextPlayer();
@@ -228,6 +238,10 @@ public class GUI implements ActionListener{
 				 
 			 }
 			 
+		 }else if(e.getSource() == savegame) {
+			 if (spiel.speichernerlaubt) {
+				 spiel.save();
+			 }
 		 }
 		 
 	}

@@ -12,6 +12,7 @@ import java.awt.event.ActionEvent;
 
 public class Spiel {
 	public boolean gewinner;
+	public boolean speichernerlaubt=false;
 	public int phase;
 	public int anderreihe;
 	public int players;
@@ -71,6 +72,8 @@ public class Spiel {
 		}else if (phase==2) {
 			//runde.truppenverschiebung();
 			runde.endstep();
+			speichernerlaubt=true;
+			erde.gui1.textfeld.setText("Sie können jetzt speichern");
 		}else System.out.println("nope");
 
 
@@ -88,7 +91,60 @@ public class Spiel {
 		}
 
 			verteilbar -=1;
-			}
+		}
 
+	void save() {
+		int a;
+		Spieler spieler;
+		
+		
+		try {
+		      File speicher = new File("speicherstand.txt");
+		      if (speicher.createNewFile()) {
+		        System.out.println("Neuer Speicherstand " + speicher.getName());
+		      } else {
+		        System.out.println("Speicherstand wurde überschrieben");
+		      }
+		    } catch (IOException e) {
+		      e.printStackTrace();
+		    }
+		try {
+			FileWriter schreiben = new FileWriter("speicherstand.txt");
+			a=players;
+			System.out.println("blblblblb");
+			schreiben.write(a+"\n");
+			for (int i=0;i<a;i++) {
+				spieler=spielende.get(i);
+				if (spieler.mensch) {
+					schreiben.write (1+" ");
+				}else schreiben.write(0 +" ");
+				schreiben.write(spieler.besetzt.size()+" ");
+				for (int j=0; j<42;j++) {
+					if (erde.laender[j].besetzer ==spieler) {
+						schreiben.write(j +" ");
+						schreiben.write(erde.laender[j].truppen +" ");
+					}	
+				}
+				schreiben.write(" 9999 ");
+				schreiben.write(spieler.hand.size()+" ");
+				for (int k=0;k<spieler.hand.size();k++) {
+					schreiben.write(spieler.hand.get(k).position +" ");
+				}
+				schreiben.write("\n");
+			}
+			a=erde.gui1.currentPlayer;
+			schreiben.write(a+"\n");
+			//schreiben.write("test");
+			schreiben.close();
+		} catch (IOException e) {
+			System.out.println("hat nicht geklappt");
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		  
+		
+	}
+	
+	
 
 	}
