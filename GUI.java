@@ -29,6 +29,7 @@ public class GUI implements ActionListener{
 		JLabel labellist[] =new JLabel[42];
 		JLabel playerlist[] = new JLabel[0];
 		JLabel phasenlist[] = new JLabel[3];
+		kartenGraph cart[] = new kartenGraph[5];
 
 		private int x[] = {150,280,560,280,400,490,280,400,310,400,420,520,450,670,790,910,650,660,800,810,
 			720,830,820,900,830,960,1040,1140,1250,1370,1230,1230,1020,1200,1380,930,
@@ -94,7 +95,10 @@ public class GUI implements ActionListener{
         }
 
         labelSetup(list,frame);
+        kartenSetup(frame,scaleX,scaleY);
 
+        
+        
         nextturn.setBounds((int)(1640*scaleX),(int)(1010*scaleY),(int)(260*scaleX),(int)(130*scaleY));
         nextturn.setText("weiter");
         nextturn.setVisible(true);
@@ -104,8 +108,6 @@ public class GUI implements ActionListener{
         savegame.setText("Speichern");
         savegame.setVisible(true);
         savegame.addActionListener(this);
-        
-        
         
         ja.setBounds((int)(1640*scaleX),(int)(900*scaleY),(int)(125*scaleX),(int)(100*scaleY));
         ja.setText("JA");
@@ -117,8 +119,6 @@ public class GUI implements ActionListener{
         nein.setVisible(true);
         nein.addActionListener(this);
         
-        
-
         textfeld.setBounds((int)(1640*scaleX),(int)(scaleY*500),(int)(260*scaleX),(int)(200*scaleY));
         textfeld.setLineWrap(true);
         textfeld.setWrapStyleWord(true);
@@ -205,17 +205,18 @@ public class GUI implements ActionListener{
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		 if(e.getSource() == nextturn) {
+
+			 spiel.speichernerlaubt=false;
 			 spiel.erde.step=0;
 			if(phase==30) {
 				phase=0;
-				System.out.println(spiel.erde.gui1.currentPlayer+"HierbinichGUIactionperformed30");
+
 				currentPlayer=0;
 				this.nextPhase();
 				this.nextPlayer();
 
 			}else {
 				phase =(phase+1)%3;}
-			System.out.println(spiel.erde.gui1.currentPlayer+"HierbinichGUIactionperformed");
 				spiel.Runde(phase);
 				this.nextPhase();
 				this.nextPlayer();
@@ -223,8 +224,7 @@ public class GUI implements ActionListener{
 
 					currentPlayer =(currentPlayer+1)%playerlist.length;
 				}
-				this.setText("SURPRISE MOTHERFUCKER");
-				System.out.print(phase);
+				spiel.erde.gui1.kartenWechseln(spiel.runde.aktiv);
 
 		 }else if(e.getSource() == ja) {
 			 if (spiel.erde.step==1) {
@@ -277,6 +277,28 @@ public class GUI implements ActionListener{
 	public void setText(String text) {
 		textfeld.setText(text);
 	}
+	private void kartenSetup(JFrame frame,double x,double y) {
+		for(int i=0;i<5;i++) {
+			kartenGraph temp = new kartenGraph((int)((30+110*i)*x),(int)((1015)*y),(int)((100)*x),(int)((130)*y));
 
+			cart[i]=temp;
+			frame.add(cart[i]);
+		}
+	}
+	public void kartenWechseln(Spieler spieler) {
+		for(int i=0;i<5;i++) {
+			cart[i].removeKarte();
+		}
+		for(int i =0;i<spieler.hand.size();i++) {
+			cart[i].setKarte(spieler.hand.get(i));
+		}
+	}
+	void setKAL(){
+        KartenListener tausch = new KartenListener(spiel);
+		for(int i = 0;i<5;i++) {
+			cart[i].addActionListener(tausch);
+		}
+
+	}
 
 }

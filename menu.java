@@ -127,6 +127,7 @@ public class menu implements ActionListener {
 			
 			gui.setRunde(runde);
 			gui.setSpiel(spiel);
+			gui.setKAL();
 			spiel.landverteilung(welt);
 			spiel.truppenverteilung(welt);
 			//spiel.save();
@@ -147,6 +148,7 @@ public class menu implements ActionListener {
 			runde = new Phasen(welt, deck);
 			spiel = new Spiel(this.getPlayerCount(),0,welt, runde);
 			runde.setSpiel(spiel);
+			gui.setKAL();
 			
 			gui.setRunde(runde);
 			gui.setSpiel(spiel);

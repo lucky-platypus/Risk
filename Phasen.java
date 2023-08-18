@@ -95,6 +95,7 @@ public class Phasen {
 	public Spiel spiel;
 	public Deck deck;
 	public int anzahl;
+	public boolean tausch=false;
 
 	
 	Phasen(Welt a, Deck b){
@@ -114,37 +115,20 @@ public class Phasen {
 	//Verstärkungen fragt erst ob Karten getauscht werden, dann Gibt es pro 3 Gebiete eine Einheite, dann für jeden Kontinent
 	void verstaerkung() {
 		anzahl=0;
-		boolean ja=false;
 		Land land;
 		Karten a,b,c;
-		do {
-			System.out.println((aktiv.hand.size()));
 			if (aktiv.hand.size()>2&&aktiv.hand.size()<5) {
-				System.out.println("Möchtest du Karten eintauschen?");
-				//Eingabe ob man tauschen möchte	
-				Scanner scan = new Scanner(System.in);
-				if (scan.nextInt()==1) ja=true;
+				 tausch=true;
 			}else if (aktiv.hand.size()==5) {
-				ja=true;
-			}else if (aktiv.hand.size()>5) System.out.println ("Hand zu groß, das darf nicht passieren");
-			if (ja) {
-				do {
-					a= aktiv.kartewählen();
-					b= aktiv.kartewählen();
-					c= aktiv.kartewählen();
-				} while (a==b || b==c);
-				anzahl+=deck.eintauschen(aktiv,a,b,c);
+				tausch=true;
 			}
-		}while (anzahl==0 && ja);
+
 		if (aktiv.territorien>=9) {
 			anzahl+=aktiv.territorien/3;
 		}else anzahl+=3;
 		for (int i=0;i<6;i++) {
 			anzahl+=erde.kontinente[i].Kontinentkontrolle(aktiv);
 		}
-		System.out.print("Du bekommst ");
-		System.out.print(anzahl);
-		System.out.println(" Verstärkungen");
 
 			}
 

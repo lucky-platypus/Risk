@@ -16,12 +16,15 @@ public class actionlistener implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		System.out.println("Klick");
 		if(spiel.erde.gui1.phase==0) {
+
 			verlegt =false;
 			for(int i = 0;i<42;i++) {
 				if(e.getSource()== spiel.erde.gui1.list[i]) {
-					Land give = spiel.erde.laender[i];
-					spiel.runde.aktiv.platzieren(1, give,spiel.runde.anzahl);
-					spiel.runde.anzahl-=1;
+					if(spiel.erde.laender[i].besetzer==spiel.runde.aktiv) {
+						Land give = spiel.erde.laender[i];
+						spiel.runde.aktiv.platzieren(1, give,spiel.runde.anzahl);
+						spiel.runde.anzahl= Math.max(spiel.runde.anzahl-1, 0);
+					}
 				}
 			}
 		}
@@ -65,6 +68,7 @@ public class actionlistener implements ActionListener {
 						spiel.ausgewaehlt=null;
 						spiel.auchausgewaehlt=null;
 						//spiel.runde.endstep();
+	
 					}
 			}
 			}

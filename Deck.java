@@ -66,6 +66,7 @@ public class Deck {
 		int halten;
 		if((a.typ==b.typ && b.typ==c.typ)||(a.typ!=b.typ&& a.typ!=c.typ && b.typ!=c.typ)) {
 			halten = tauschintensität;
+			System.out.print(tauschintensität);
 			tauschintensität +=2;
 			Land ln;
 			for (int i=0; i < aktiv.besetzt.size();i++) {
@@ -77,6 +78,8 @@ public class Deck {
 			aktiv.nimmKarte(a);
 			aktiv.nimmKarte(b);
 			aktiv.nimmKarte(c);
+			System.out.print(tauschintensität);
+			System.out.print(halten);
 			return halten;
 		}
 		System.out.println("fehler: Karten sind so nicht tauschbar");
