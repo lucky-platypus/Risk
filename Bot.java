@@ -1,9 +1,13 @@
 package risiko;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class Bot {
 	Spiel spiel;
 	Spieler ich;
+	Kontinent ziel;
+	int[] kontinentwert =  { 3, 6, 2, 4, 1, 7};
+	int verstaerkungen =0;
 	
 	Bot(Spiel a, Spieler b){
 		spiel =a;
@@ -21,6 +25,7 @@ public class Bot {
 			anzahl+=spiel.erde.kontinente[i].Kontinentkontrolle(ich);
 		}
 		if (ich.hand.size()>=3) anzahl +=kartentausch();
+		verstaerkungen=anzahl;
 		
 	}
 	
@@ -82,6 +87,43 @@ public class Bot {
 		
 		return anzahl;
 	}*/
+	void zielkontinent () {
+		int freund, feind, dis;
+		dis=0;
+		double max;
+		Land land;
+		Kontinent kontinent;
+		double[] relation = new double[6];
+		for(int i=0;i<spiel.erde.kontinente.length;i++) {
+			freund =0;
+			feind =0;
+			kontinent =spiel.erde.kontinente[i];
+			if (kontinent.Kontinentkontrolle(ich)!=0) {
+				for(int j=0;j<kontinent.enthalten.size();j++) {
+					land =kontinent.enthalten.get(j);
+					if (land.besetzer==ich) {
+						freund+=land.truppen;
+					}else feind+=land.truppen;
+				}
+				relation[i]=(freund+verstaerkungen)/feind;
+				
+			}else	relation[i]=0;
+			
+		}
+
+		max=0;
+		for (int i=0;i<relation.length;i++) {
+			if (relation[i]*kontinentwert[i]>max) {
+				max=relation[i];
+				dis=i;
+			}
+		}
+		ziel=spiel.erde.kontinente[dis];
+		
+	}
+	
+	
+	
 	
 	
 	void rochade () {
