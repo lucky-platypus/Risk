@@ -16,6 +16,7 @@ public class Spieler {
 	private Color color;
 	private int truppen;
 	private Bot ich;
+	private boolean verloren;
 	
 	
 	
@@ -50,6 +51,11 @@ public class Spieler {
 			return true;
 		}else return false;
 	}
+	boolean hatVerloren(){
+		if(besetzt.size()<=0) {
+			return true;
+		}else return false;
+	}
 	
 	/**
 	 * entfernt ein verlorenes Land
@@ -60,7 +66,7 @@ public class Spieler {
 			besetzt.remove(v);
 			territorien -=1;	
 		}else {
-			System.out.println("Error: Land nicht da wos sein sollte");
+			
 		}
 	}
 	
@@ -79,7 +85,6 @@ public class Spieler {
 		if (hand.contains(n)) {
 			hand.remove(n);
 		}else {
-			System.out.println("Error: Handkarte nicht vorhanden");
 		}
 	}
 	/**
@@ -96,7 +101,7 @@ public class Spieler {
 					ziel.verstaerken(verstaerkung);
 					truppen -= verstaerkung;
 				}
-			}else System.out.println("Das ist nicht dein Land");
+			}else ;
 		}
 
 	

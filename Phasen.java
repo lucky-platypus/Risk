@@ -33,8 +33,7 @@ public class Phasen {
 	 */
 	void verstaerkung() {
 		anzahl=0;
-		Land land;
-		Karten a,b,c;
+
 			if (aktiv.hand.size()>2&&aktiv.hand.size()<5) {
 				 tausch=true;
 			}else if (aktiv.hand.size()==5) {
@@ -73,7 +72,7 @@ public class Phasen {
 		do {
 			erde.gui1.textfeld.setText("Mit wievielen Truppen möchtest du angreifen?");
 			try {
-				atruppen= Integer.parseInt(erde.gui1.textfeld2.getText());
+				atruppen= Math.max(atruppen= Math.max(1,angreifer.getTruppen()-1 ),Integer.parseInt(erde.gui1.textfeld2.getText()));
 				if (atruppen>=angreifer.getTruppen())atruppen=angreifer.getTruppen()-1;
 			} catch (NumberFormatException e) {
 				erde.gui1.textfeld.setText("Du musst ein Int eingeben");
@@ -145,7 +144,7 @@ public class Phasen {
 		 str+=atruppen;
 		 str+=" Truppen \nDer Verteidiger hat noch ";
 		 str+=v.getTruppen();
-		 str+=" Truppen \nAngriff fortgesetzt ?";
+		 str+=" Truppen \nAngriff fortsetzen ?";
 		 erde.gui1.textfeld.setText(str);
 		 
 		 

@@ -43,12 +43,21 @@ public class Deck {
 	 * @param p Gewählter spieler
 	 */
 	public void austeilen (Spieler p) {
+		if (deck.size()==0) {
+			gefüllt = ablage.size();
+			for(int i = 0;i<ablage.size();i++) {
+				deck.add(ablage.get(i));
+			}
+
+		}
+		
 		int r;
 		Karten haltmal;
 		Random shuffle = new Random();
-		r = shuffle.nextInt(Math.max(gefüllt,0));
+		r = shuffle.nextInt(Math.max(gefüllt,1));
 		haltmal=deck.get(r);
 		deck.remove(r);
+		addAblage(haltmal);
 		gefüllt -=1;
 		p.gibKarte(haltmal);
 		if (gefüllt==0) {
@@ -56,7 +65,7 @@ public class Deck {
 			for(int i = 0;i<ablage.size();i++) {
 				deck.add(ablage.get(i));
 			}
-			ablage.clear();
+	
 		}
 		
 	}
@@ -67,7 +76,7 @@ public class Deck {
 	 * 
 	 * @param k  abgelegte karte
 	 */
-	public void ablage (Karten k) {
+	public void addAblage (Karten k) {
 		ablage.add(k);
 	}
 	/**

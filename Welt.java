@@ -40,7 +40,7 @@ public class Welt {
 				}
 			}
 		} catch (FileNotFoundException e) {
-			System.out.println("File nicht da");
+		
 			//Scanner lies = new Scanner(System.in);
 			e.printStackTrace();
 		}

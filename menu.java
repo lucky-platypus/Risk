@@ -184,7 +184,6 @@ public class menu implements ActionListener {
 					dran.erobert(welt.laender[a]);
 					welt.laender[a].setbesetzer(dran, b);
 				}
-				if(scan.nextInt()!=9999) System.out.println("Da ist was beim Laden schief gelaufen");
 				landzahl= scan.nextInt();
 				for (int k=0;k<landzahl;k++) {
 					a=scan.nextInt();

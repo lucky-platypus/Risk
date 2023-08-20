@@ -34,7 +34,11 @@ public class actionlistener implements ActionListener {
 				Land give = clicked;
 				runde.getAktiv().platzieren(1, clicked,runde.getAnzahl());
 				runde.setAnzahl( Math.max(runde.getAnzahl()-1, 0));
+				if(runde.getAnzahl()>0) {
+					welt.gui1.textfeld.setText("Du hast noch " +runde.getAnzahl()+" verstaerkung");
+				}else {
 				welt.gui1.textfeld.setText("");
+				}
 			}else {
 				welt.gui1.textfeld.setText("das ist nicht dein Land");
 			}

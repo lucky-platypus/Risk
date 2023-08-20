@@ -2,7 +2,6 @@ package risiko;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
-
 public class Bot {
 	private boolean fertig;
 	Spiel spiel;
@@ -43,7 +42,6 @@ public class Bot {
 		ich =b;
 		
 		
-
 	
 	}
 	
@@ -57,25 +55,24 @@ public class Bot {
 			anzahl+=spiel.erde.kontinente[i].Kontinentkontrolle(ich);
 		}
 		if (ich.hand.size()>=4) anzahl +=kartentausch();
+		verstEntscheidung(anzahl);
 		if(ich.besetzt.size()==1) {
             ich.besetzt.get(0).verstaerken(verstaerkungen);
         }else verstEntscheidung(anzahl);
 		fertig =true;
-		
-		
+
+
 	}
 	public void verstEntscheidung(int s) {
-
 		int x;
 		int max =0;
 		double chance;
 		Land land, lal;
-		lal= ich.besetzt.get(1);
+		if(ich.besetzt.size()>0) {
+			lal= ich.besetzt.get(0);
+		}else lal =null;
 		chance = zielkontinent();
 		verstaerkungen =s;
-		System.out.println(ich.toString());
-		System.out.println(ziel.getName());
-		System.out.println(zielb.getName());
 		if (chance<=2.5) {
 			for (int i=0;i<ziel.enthalten.size();i++) {
 				x=0;
@@ -95,7 +92,7 @@ public class Bot {
 			if(ich.besetzt.contains(lal)) {
 			spiel.erde.gui1.textfeld.setText(lal.getName()+" wurde verstärkt");
 			lal.verstaerken(s);
-			}else System.out.println("error");
+			}else;
 		}else {
 			for (int i=0;i<zielb.enthalten.size();i++) {
 				x=0;
@@ -115,7 +112,7 @@ public class Bot {
 			spiel.erde.gui1.textfeld.setText(lal.getName()+" wurde verstärkt");
 			lal.verstaerken(s);
 		}
-		
+
 	}
 	
 	
@@ -132,13 +129,11 @@ public class Bot {
 		do {
 	        zwischen.clear();
 	        encounteredTypes.clear();
-
 	        for (int j = 0; j < ich.hand.size(); j++) {
 	            if (ich.hand.get(j).getTyp() == anzahl) {
 	                zwischen.add(ich.hand.get(j));
 	            }
 	        }
-
 	        if (anzahl == 3) {
 	            for (int j = 0; j < ich.hand.size(); j++) {
 	                karte = ich.hand.get(j);
@@ -148,7 +143,6 @@ public class Bot {
 	                }
 	            }
 	        }
-
 	        anzahl += 1;
 	    } while (zwischen.size() < 3 && anzahl <= 3);
 		if (anzahl==4 && zwischen.size()<3) return 0;
@@ -193,7 +187,6 @@ public class Bot {
 	
 	//Berechnet den Kontinent, welcher diese Runde bevorzugt angegriffen werden soll, aus den höchsten Erfolgschancen und dem Strategischen Wert des Kontinents
 	double zielkontinent () {
-
 		int  dis,das;
 		dis=0;
 		das=0;
@@ -226,7 +219,6 @@ public class Bot {
 			}else	relation[i]=0;
 			
 		}
-
 		max=0;
 		for (int i=0;i<relation.length-6;i++) {
 			if (relation[i]*kontinentwert[i]>max) {
@@ -248,19 +240,19 @@ public class Bot {
 		zielb=spiel.erde.kontinente[das];
 		return max/kontinentwert[dis];
 	}
-	
+
 	void erobern() {
-		
+
 		ansagen="";
-		System.out.print("funk");
+
 		fertig =false;
 		double intensität =50;
 		double lohntsich=1;
 		boolean weiter = true;
 		while (weiter) {
-			System.out.println("erorbern");
+	
 			lohntsich = zielwahl(intensität);
-			System.out.println(lohntsich);
+
 			if (lohntsich<=intensität) weiter=false;
 			intensität+=10;
 			if (angreifer!=verteidiger) {
@@ -274,12 +266,12 @@ public class Bot {
 				}
 				aikampf(angreifer.getTruppen()-1);
 			}
-			
+
 		}
 		spiel.erde.gui1.textfeld.setText(ansagen);
 		fertig =true;
 	}
-	
+
 	void aikampf(int atruppen) {
 		boolean weiter = true;
 		int min;
@@ -288,27 +280,23 @@ public class Bot {
 			angreifer.verlust(atruppen);
 			while (weiter) {
 				weiter =false;
-				System.out.println(angreifer.getName());
-				System.out.println(verteidiger.getName());
 				ich.würfeln(atruppen, false);
 				defender.würfeln(verteidiger.getTruppen(), true);
 				min = 3- Math.min(2,Math.min(atruppen, verteidiger.getTruppen()));
 				for(int i = 2; i>= min ;i--) {
-					System.out.print(ich.ergebnis[i]);
-					System.out.print(" vs ");
-					System.out.println(defender.ergebnis[i]);
 					if (ich.ergebnis[i]>defender.ergebnis[i]){
 						verteidiger.verlust(1);
 					}else if (ich.ergebnis[i]<=defender.ergebnis[i]) {
 						atruppen-=1;
-					}else System.out.println("Wie bin ich denn bitte hier gelandet?");
-					
+					}else ;
+
 				}
 				if (atruppen==0) {
 					ansagen+=verteidiger.getName()+" wurde erfolglos angegriffen\n";
 					return;
 				}else if(verteidiger.getTruppen()==0) {
 					defender.verloren(verteidiger);
+					spiel.erde.gui1.textfeld.setText("der Angriff war erfolgreich");
 					//spiel.erde.gui1.textfeld.setText("der Angriff war erfolgreich");
 					verteidiger.setbesetzer(ich, atruppen);
 					ich.setEroberer(true);
@@ -317,7 +305,7 @@ public class Bot {
 					spiel.ausgewaehlt=null;
 					spiel.auchausgewaehlt=null;
 					ansagen+=verteidiger.getName()+" wurde erobert\n";
-					
+
 				}else if (chancen[Math.min(verteidiger.getTruppen(),19)][Math.min(atruppen, 19)]<41) {
 					weiter=false;
 					angreifer.verstaerken(atruppen);
@@ -449,9 +437,7 @@ public class Bot {
 		int haltmal=0;
 		Land land;
 		ArrayList<Land> grenze = new ArrayList<Land>();
-
 		ArrayList<Land> inland = new ArrayList<Land>();
-
 		for (int i=0; i<ich.besetzt.size();i++) {
 			land=ich.besetzt.get(i);
 			for(int j=0;j<land.nachbar.size();j++) {
@@ -512,7 +498,6 @@ public class Bot {
 			}
 		}
 		if (hochwert>2*verstärkungen) {
-			System.out.println("Ich bin hier rein");
 			ArrayList<Land> zweite = new ArrayList<Land>();
 			j=x;
 			x=0;
@@ -520,7 +505,6 @@ public class Bot {
 			land = inland.get(j);
 			zweite.add(land);
 			while (x<zweite.size()) {
-				System.out.println("Ich bin hier rein");
 				land=zweite.get(x);
 				for (int i=0;i<land.nachbar.size();i++) {
 					if (land.nachbar.get(i).getBesetzer()==ich && !zweite.contains(land.nachbar.get(i))) {
@@ -531,7 +515,6 @@ public class Bot {
 			}
 			hoch=0;
 			for (int i=0;i<grenze.size();i++) {
-				System.out.println("Hier auch");
 				if (zweite.contains(grenze.get(i))) {
 					if(grenzwert[i]>hoch) {
 						hoch=grenzwert[i];
@@ -541,8 +524,6 @@ public class Bot {
 				}
 			}
 		}
-
-
 		if (verstärkungen>1) {
 			inland.get(j).verlust(verstärkungen-1);
 			grenze.get(haltmal).verstaerken(verstärkungen-1);

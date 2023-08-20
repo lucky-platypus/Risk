@@ -70,7 +70,13 @@ public class Spiel {
 	 * @param phase aktuelle phase
 	 */
 	void Runde(int phase){
-		runde.setaktiv(spielende.get(erde.gui1.getCurrentPlayer()));
+		runde.setaktiv(spielende.get(erde.gui1.getCurrentPlayer()%5));
+		if(runde.getAktiv().hatVerloren()) {
+			while(runde.getAktiv().hatVerloren()) {
+				erde.gui1.setCurrentPlayer(erde.gui1.getCurrentPlayer()+1);
+				runde.setaktiv(spielende.get(erde.gui1.getCurrentPlayer()%5));
+			}
+		}
 		if (phase ==0) {
 
 			if(runde.getAktiv().getMensch()) {
@@ -84,7 +90,7 @@ public class Spiel {
 			if(!runde.getAktiv().getMensch()) {
 			runde.getAktiv().getIch().erobern();
 			}else {
-				erde.gui1.textfeld.setText("Wähle zwei Länder und gib eine Truppenanzahl ein um einen angriff zu starten");
+				erde.gui1.textfeld.setText("Wähle zwei Länder und gib eine Truppenanzahl ein  oder lasse das feld frei um einen angriff zu starten");
 			}
 			if (runde.getAktiv().hatgewonnen()) {
 				gewinner =true;
@@ -105,9 +111,9 @@ public class Spiel {
 				gewinner =true;
 				return;
 			}
-		}else System.out.println("nope");
+		}else ;
 
-
+		
 	}
 	/**
 	 * truppenverteilung am anfang des Spiels
@@ -182,7 +188,6 @@ public class Spiel {
 			//schreiben.write("test");
 			schreiben.close();
 		} catch (IOException e) {
-			System.out.println("hat nicht geklappt");
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
