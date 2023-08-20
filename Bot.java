@@ -8,6 +8,7 @@ public class Bot {
 	Spiel spiel;
 	Spieler ich;
 	Kontinent ziel, zielb;
+	String ansagen;
 	Land angreifer, verteidiger;
 	int[] kontinentwert =  { 3, 6, 2, 4, 1, 7};
 	int[] isolation;
@@ -56,7 +57,9 @@ public class Bot {
 			anzahl+=spiel.erde.kontinente[i].Kontinentkontrolle(ich);
 		}
 		if (ich.hand.size()>=4) anzahl +=kartentausch();
-		verstEntscheidung(anzahl);
+		if(ich.besetzt.size()==1) {
+            ich.besetzt.get(0).verstaerken(verstaerkungen);
+        }else verstEntscheidung(anzahl);
 		fertig =true;
 		
 		
@@ -90,6 +93,7 @@ public class Bot {
 				}
 			}
 			if(ich.besetzt.contains(lal)) {
+			spiel.erde.gui1.textfeld.setText(lal.getName()+" wurde verstärkt");
 			lal.verstaerken(s);
 			}else System.out.println("error");
 		}else {
@@ -108,6 +112,7 @@ public class Bot {
 					}
 				}
 			}
+			spiel.erde.gui1.textfeld.setText(lal.getName()+" wurde verstärkt");
 			lal.verstaerken(s);
 		}
 		
@@ -245,6 +250,8 @@ public class Bot {
 	}
 	
 	void erobern() {
+		
+		ansagen="";
 		System.out.print("funk");
 		fertig =false;
 		double intensität =50;
@@ -269,6 +276,7 @@ public class Bot {
 			}
 			
 		}
+		spiel.erde.gui1.textfeld.setText(ansagen);
 		fertig =true;
 	}
 	
@@ -297,20 +305,23 @@ public class Bot {
 					
 				}
 				if (atruppen==0) {
+					ansagen+=verteidiger.getName()+" wurde erfolglos angegriffen\n";
 					return;
 				}else if(verteidiger.getTruppen()==0) {
 					defender.verloren(verteidiger);
-					spiel.erde.gui1.textfeld.setText("der Angriff war erfolgreich");
+					//spiel.erde.gui1.textfeld.setText("der Angriff war erfolgreich");
 					verteidiger.setbesetzer(ich, atruppen);
 					ich.setEroberer(true);
 					ich.erobert(verteidiger);
 					weiter =false;
 					spiel.ausgewaehlt=null;
 					spiel.auchausgewaehlt=null;
+					ansagen+=verteidiger.getName()+" wurde erobert\n";
 					
 				}else if (chancen[Math.min(verteidiger.getTruppen(),19)][Math.min(atruppen, 19)]<41) {
 					weiter=false;
 					angreifer.verstaerken(atruppen);
+					ansagen+=verteidiger.getName()+" wurde erfolglos angegriffen\n";
 				}else weiter =true;
 			}
 		}else {
