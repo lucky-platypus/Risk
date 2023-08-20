@@ -102,8 +102,8 @@ public class GUI implements ActionListener{
         ja = thisButton("JA",1640,900,125,100,scaleX,scaleY);
         nein = thisButton("NEIN",1775,900,125,100,scaleX,scaleY);
         
-        textfeld =textfeld("Ausgabefeld",1640,500,260,200,scaleX,scaleY);
-        textfeld2 =textfeld("Eingabefeld",1640,705,260,190,scaleX,scaleY);
+        textfeld =textfeld("Ausgabefeld",1640,500,260,300,scaleX,scaleY);
+        textfeld2 =textfeld("Eingabefeld",1640,805,260,90,scaleX,scaleY);
         
         frame.add(savegame);
         frame.add(nextturn);
@@ -284,7 +284,7 @@ public class GUI implements ActionListener{
 	 */
 	private JTextArea textfeld (String text,int x,int y,int height,int withd,double scaleX,double scaleY) {
         JTextArea textfeld = new JTextArea();
-        textfeld.setBounds((int)(x*scaleX),(int)(scaleY*y),(int)(260*scaleX),(int)(190*scaleY));
+        textfeld.setBounds((int)(x*scaleX),(int)(scaleY*y),(int)(height*scaleX),(int)(withd*scaleY));
         textfeld.setLineWrap(true);
         textfeld.setWrapStyleWord(true);
         textfeld.setText(text);
