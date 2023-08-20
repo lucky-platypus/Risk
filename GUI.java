@@ -96,7 +96,7 @@ public class GUI implements ActionListener{
         labelSetup(list,frame);
         kartenSetup(frame,scaleX,scaleY);
 
-        
+   
         nextturn = thisButton("weiter",1640,1010,260,130,scaleX,scaleY);        
         savegame = thisButton("Speichern",1420,1010,200,130,scaleX,scaleY);
         ja = thisButton("JA",1640,900,125,100,scaleX,scaleY);
@@ -117,7 +117,12 @@ public class GUI implements ActionListener{
 
     }
 
-
+	/**
+	 * erstellen des frames
+	 * @param aX skalierung x
+	 * @param aY skalierung y
+	 * @return erstellter frame
+	 */
     private static JFrame buildFrame(double aX,double aY) {
         JFrame frame = new JFrame();
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
@@ -125,6 +130,21 @@ public class GUI implements ActionListener{
         frame.setVisible(true);
         return frame;
     }
+
+    /**
+	/**
+	 * 	erstellen eines Länderbuttons
+	 * 
+	 * @param s Name des landes
+	 * @param x X position 
+	 * @param y Y position
+	 * @param height Höhe
+	 * @param withd Breite 
+	 * @param scaleX Skalierung X
+	 * @param scaleY Skalierung Y
+     * @param fontSize
+     * @return erstellter button
+     */
     private static JButton buildButton(int x, int y,String name, int height,int withd, int fontSize) {
         JButton button = new JButton();
 		Font font = new Font("Monospaced", Font.BOLD,fontSize);
@@ -137,6 +157,19 @@ public class GUI implements ActionListener{
         return button;
 
     }
+    
+	/**
+	 * 	erstellen der Spieleranzeige 
+	 * 
+	 * @param s Name des spielers
+	 * @param x X position 
+	 * @param y Y position
+	 * @param height Höhe
+	 * @param withd Breite 
+	 * @param scaleX Skalierung X
+	 * @param scaleY Skalierung Y
+	 * @return erstelltes Label
+	 */
     private static JLabel buildPlayerLabel(int x, int y, String name,int withd,int height) {
         JLabel label = new JLabel();
         label.setBounds(x, y, withd, height);
@@ -147,13 +180,13 @@ public class GUI implements ActionListener{
         return label;
     }
 
-    public void setRunde(Phasen phase) {
-    	phasen = phase;
-    }
-    public void setSpiel (Spiel x) {
-    	spiel =x;
-    }
 
+    /**
+     * erstellen aller länderbuttons
+     * @param frame Frame der GUI
+     * @param xScaling Skalierung X
+     * @param yScaling Skalierung Y
+     */
     private void buttonSetup(JFrame frame,double xScaling,double yScaling) {
         BufferedReader lies;
 		try {
@@ -172,11 +205,16 @@ public class GUI implements ActionListener{
 		}
     }
 
-    //aktionen der Ja/Nein/Weiter/Speicher buttons
+    /**
+     * aktionen der Ja/Nein/Weiter/Speicher buttons
+     */
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if(!spiel.getGewinner()) {
+			
 		 if(e.getSource() == nextturn) {
+			 	textfeld.setText("");
+			 	textfeld2.setText("");
 				 spiel.setSpeichernerlaubt(false);
 				 spiel.erde.setStep(0);
 				 if(phase==30) {
@@ -187,7 +225,16 @@ public class GUI implements ActionListener{
 					 this.nextPlayer();
 
 				 }else {
-					 phase =(phase+1)%3;}
+					 if(phase ==0) {
+						 if(spiel.getRunde().getAktiv().hand.size()<5)	{
+							 phase =(phase+1)%3;
+						 }else {
+							 textfeld.setText("du musst karten eintauschen");
+						 }
+						 }
+							 
+					 else {
+					 phase =(phase+1)%3;}}
 				 	spiel.Runde(phase);
 				 	this.nextPhase();
 				 	this.nextPlayer();
@@ -200,7 +247,7 @@ public class GUI implements ActionListener{
 		 }
 		 else if(e.getSource() == ja && spiel.getRunde().getAktiv().getMensch()) {
 			 if (spiel.erde.getStep()==1) {
-				 if(spiel.ausgewaehlt !=null)
+				 if(spiel.ausgewaehlt !=null&&spiel.auchausgewaehlt !=null)
 				 spiel.getRunde().kampf(spiel.ausgewaehlt , spiel.auchausgewaehlt);
 			 }
 			 
@@ -208,19 +255,33 @@ public class GUI implements ActionListener{
 			 if (spiel.erde.getStep()==1) {
 				 spiel.ausgewaehlt=null;
 				 spiel.auchausgewaehlt=null;
+				 textfeld2.setText("");
 				 
 			 }
 			 
-		 }else if(e.getSource() == savegame && spiel.getRunde().getAktiv().getMensch()) {
+		 }else if(e.getSource() == savegame) {
 			 if (spiel.getSpeichernerlaubt()) {
 				 spiel.save();
 			 }
 		 }
-		}else {
+	}else {
+			textfeld.setText("Gewinner Gefunden");
 			textfeld2.setText("Gewinner Gefunden");
-		}
-	}
-	
+}
+}
+
+	/**
+	 * 	erstellen der textfelder
+	 * 
+	 * @param s Name des Texteldes
+	 * @param x X position 
+	 * @param y Y position
+	 * @param height Höhe
+	 * @param withd Breite 
+	 * @param scaleX Skalierung X
+	 * @param scaleY Skalierung Y
+	 * @return erstelltes Textfeld
+	 */
 	private JTextArea textfeld (String text,int x,int y,int height,int withd,double scaleX,double scaleY) {
         JTextArea textfeld = new JTextArea();
         textfeld.setBounds((int)(x*scaleX),(int)(scaleY*y),(int)(260*scaleX),(int)(190*scaleY));
@@ -230,6 +291,19 @@ public class GUI implements ActionListener{
         textfeld.setBorder(new LineBorder(Color.BLACK,3));
         return textfeld;
 	}
+
+	/**
+	 * erstellen Ja/Nein/weiter/speichern buttons
+	 * 
+	 * @param s Name des Buttons
+	 * @param x X position 
+	 * @param y Y position
+	 * @param height Höhe
+	 * @param withd Breite 
+	 * @param scaleX Skalierung X
+	 * @param scaleY Skalierung Y
+	 * @return erstellter button
+	 */
 	private JButton thisButton(String s,int x,int y,int height,int withd,double scaleX,double scaleY) {
 		JButton temp = new JButton();
         temp.setBounds((int)(x*scaleX),(int)(y*scaleY),(int)(height*scaleX),(int)(withd*scaleY));
@@ -240,7 +314,9 @@ public class GUI implements ActionListener{
 	}
 
 
-	//Aktualliserung der Phasenanzeige
+	/**
+	 * Aktualliserung der Phasenanzeige
+	 */
 	public void nextPhase() {
 		for (int i=0;i<3;i++) {
 			phasenlist[i].setBackground(Color.white);
@@ -248,7 +324,10 @@ public class GUI implements ActionListener{
 		}
 
 	}
-	//Aktualliserung der Spieleranzeige
+
+	/**
+	 * Aktualliserung der Spieleranzeige
+	 */
 	public void nextPlayer() {
 		for (int i=0;i<playerlist.length;i++) {
 			playerlist[i].setBackground(Color.white);
@@ -256,7 +335,12 @@ public class GUI implements ActionListener{
 		}
 	}
 	
-	//erstellen der Labels für truppenanzeige
+	/**
+	 * erstellen der Labels für truppenanzeige
+	 * 
+	 * @param button Button des Landes
+	 * @param frame Frame der GUI
+	 */
 	private void labelSetup(JButton[] button,JFrame frame) {
 		for(int i=0;i<button.length;i++) {
 			labellist[i]=(buildPlayerLabel(button[i].getX()+(button[i].getWidth()/2-15),button[i].getY()+button[i].getHeight(),"1",30,10));
@@ -264,13 +348,25 @@ public class GUI implements ActionListener{
 		}
 	}
 	
-	//Aktualliserung der Truppenanzeige
+	/**
+	 * Aktualliserung der Truppenanzeige
+	 * 
+	 * @param c Label das geändert wird
+	 * @param i neuer truppenwert
+	 */
 	public void changeLabelInt(JLabel c,int i) {
 		c.setText(String.valueOf(i+Integer.parseInt(c.getText())));
 	}
 	
 	
-	//erstellen der Kartenanzeige
+
+	/**
+	 * erstellen der Kartenanzeige
+	 * 
+	 * @param frame Frame der GUI
+	 * @param x Skalierwert X Richtung
+	 * @param y Skalierwert X Richtung
+	 */
 	private void kartenSetup(JFrame frame,double x,double y) {
 		for(int i=0;i<5;i++) {
 			kartenGraph temp = new kartenGraph((int)((30+110*i)*x),(int)((1015)*y),(int)((100)*x),(int)((130)*y));
@@ -280,7 +376,11 @@ public class GUI implements ActionListener{
 		}
 	}
 	
-	//aktualliserung der Kartenanzeige
+	
+	/**
+	 * aktualliserung der Kartenanzeige 
+	 * @param spieler Spieler des Karten angezeigt werden sollen
+	 */
 	public void kartenWechseln(Spieler spieler) {
 		for(int i=0;i<5;i++) {
 			cart[i].removeKarte();
@@ -290,7 +390,9 @@ public class GUI implements ActionListener{
 		}
 	}
 	
-	//zuweisen der Actionlistener zu Kartenbuttons
+	/**
+	 * zuweisen der Actionlistener zu Kartenbuttons
+	 */
 	void setKAL(){
         KartenListener tausch = new KartenListener(spiel);
 		for(int i = 0;i<5;i++) {
@@ -299,7 +401,7 @@ public class GUI implements ActionListener{
 
 	}
 	
-	//Getters und Setters
+	//Getter und Setter
 	public int getCurrentPlayer() {
 		return	currentPlayer;
 	}
@@ -315,4 +417,10 @@ public class GUI implements ActionListener{
 	public void setText(String text) {
 		textfeld.setText(text);
 	}
+    public void setRunde(Phasen phase) {
+    	phasen = phase;
+    }
+    public void setSpiel (Spiel x) {
+    	spiel =x;
+    }
 }

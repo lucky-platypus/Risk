@@ -25,20 +25,23 @@ public class actionlistener implements ActionListener {
 		if(runde.getAktiv().getMensch()) {
 		clicked = getClickedCountry(e);
 		
-		//Ausführung erste Phaste
+		//Ausführung erste Phase
 		if(welt.gui1.getPhase()==0) {
 
 			verlegt =false;
-			
+			//gewähltes land überprüfen und truppen platzieren
 			if(clicked.getBesetzer()==runde.getAktiv()) {
 				Land give = clicked;
 				runde.getAktiv().platzieren(1, clicked,runde.getAnzahl());
 				runde.setAnzahl( Math.max(runde.getAnzahl()-1, 0));
+				welt.gui1.textfeld.setText("");
+			}else {
+				welt.gui1.textfeld.setText("das ist nicht dein Land");
 			}
 		}
+		//Ausführung zweite Phase
 		else if(welt.gui1.getPhase()==1){
 			if (!landausgewaehlt) {
-
 						if (clicked.getBesetzer()==runde.getAktiv()) {
 							spiel.ausgewaehlt=clicked;
 							landausgewaehlt = true;
@@ -52,6 +55,7 @@ public class actionlistener implements ActionListener {
 						
 			}
 		}
+		//Ausführung dritte Phase
 		else if(welt.gui1.getPhase()==2){
 			if (!landausgewaehlt&&!verlegt) {
 
@@ -69,6 +73,7 @@ public class actionlistener implements ActionListener {
 	
 			}
 		}
+		//ausführung anfangs truppenplatzierung
 		else {
 
 					Land give = clicked;
@@ -87,10 +92,20 @@ public class actionlistener implements ActionListener {
 						welt.gui1.textfeld.setText("Das ist nicht dein land");
 						
 					}
+					while(!spiel.spielende.get(spieler).getMensch()) {
+						spiel.spielende.get(spieler).getIch().verstEntscheidung(5);
+						spieler = (spieler+1)%spiel.getPlayers();
+					}
 		}
 		clicked =null;
 		}
 	}	
+	/**
+	 * finden des gelickten landes
+	 * 
+	 * @param e Action event des ActionListeners
+	 * @return gelicktes Land
+	 */
 	private Land getClickedCountry(ActionEvent e) {
 		for(int i = 0;i<42;i++) {
 			if(e.getSource()==welt.gui1.list[i]) {

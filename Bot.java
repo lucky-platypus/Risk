@@ -63,28 +63,54 @@ public class Bot {
 		
 	}
 	public void verstEntscheidung(int s) {
+
 		int x;
 		int max =0;
 		double chance;
 		Land land, lal;
 		lal= ich.besetzt.get(1);
 		chance = zielkontinent();
-		for (int i=0;i<ziel.enthalten.size();i++) {
-			x=0;
-			land = ziel.enthalten.get(i);
-			if(land.getBesetzer()==ich) {
-				for (int j=0;j<land.nachbar.size();j++) {
-					if(land.nachbar.get(j).getBesetzer()!=ich) {
-						x+=1;
+		System.out.println(ich.toString());
+		System.out.println(ziel.getName());
+		System.out.println(zielb.getName());
+		if (chance<=2.5) {
+			for (int i=0;i<ziel.enthalten.size();i++) {
+				x=0;
+				land = ziel.enthalten.get(i);
+				if(land.getBesetzer()==ich) {
+					for (int j=0;j<land.nachbar.size();j++) {
+						if(land.nachbar.get(j).getBesetzer()!=ich) {
+							x+=1;
+						}
+					}
+				}
+				if (x>=max) {
+					max=x;
+					lal =land;
+				}
+			}
+			if(ich.besetzt.contains(lal)) {
+			lal.verstaerken(s);
+			}else System.out.println("error");
+		}else {
+			for (int i=0;i<zielb.enthalten.size();i++) {
+				x=0;
+				land = zielb.enthalten.get(i);
+				if(land.getBesetzer()==ich) {
+					for (int j=0;j<land.nachbar.size();j++) {
+						if(land.nachbar.get(j).getBesetzer()!=ich) {
+							x+=1;
+							if (x>=max) {
+								max=x;
+								lal =land;
+							}
+						}
 					}
 				}
 			}
-			if (x>=max) {
-				max=x;
-				lal =land;
-			}
+			lal.verstaerken(s);
 		}
-		lal.verstaerken(s);
+		
 	}
 	
 	
@@ -166,7 +192,7 @@ public class Bot {
 		int freund, feind, dis,das;
 		dis=0;
 		das=0;
-		double max;
+		double max,moritz;
 		Land land;
 		Kontinent kontinent;
 		double[] relation = new double[12];
@@ -181,7 +207,10 @@ public class Bot {
 						freund+=land.getTruppen();
 					}else feind+=land.getTruppen();
 				}
+				if(freund>0) {
 				relation[i]=(freund+verstaerkungen)/feind;
+				}else relation[i]=0;
+				
 				relation[i+6]=freund/feind;
 				
 			}else	relation[i]=0;
@@ -196,12 +225,12 @@ public class Bot {
 			}
 		}
 		ziel=spiel.erde.kontinente[dis];
-		max=0;
-		for (int i=6;i<relation.length;i++) {
-			if (relation[i]*kontinentwert[i-6]>max) {
-				if (i!=dis) {
-					max=relation[i]*kontinentwert[i-6];
-					das=i-6;
+		moritz=0;
+		for (int i=6;i<relation.length-1;i++) {
+			if (relation[i]*kontinentwert[i-6]>moritz) {
+				if (spiel.erde.kontinente[i%6]!=ziel) {
+					moritz=relation[i]*kontinentwert[i%6];
+					das=i%6;
 				}
 				
 			}

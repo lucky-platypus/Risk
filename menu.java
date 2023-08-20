@@ -39,6 +39,9 @@ public class menu implements ActionListener {
 	
 	private int playerCount;
 	private int botCount;
+	/**
+	 * legt aktionen der speichern und laden knöpfe fest
+	 */
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		
@@ -122,7 +125,10 @@ public class menu implements ActionListener {
 		public int getPlayerCount() {
 			return this.playerCount;
 		}
-	
+		/**
+		 * erstellt ein neues spiel
+		 * @throws IOException
+		 */
 		public void spielSetup() throws IOException{
 			GUI gui =new GUI(this.aufloesungX,this.aufloesungX,this.playerCount);
 			welt = new Welt(gui);
@@ -139,8 +145,11 @@ public class menu implements ActionListener {
 			gui.setKAL();
 			spiel.landverteilung(welt);
 			spiel.truppenverteilung(welt);
-			//spiel.save();
 		}
+		/**
+		 * Liest einen gespeicherten spielstand ein 
+		 * @throws IOException
+		 */
 		
 		public void spielLaden()throws IOException{
 			String gelesen;
@@ -151,16 +160,17 @@ public class menu implements ActionListener {
 			gelesen =lies.readLine();
 			Scanner scan = new Scanner(gelesen);
 			playerCount=scan.nextInt();
+			botCount = scan.nextInt();
 			GUI gui =new GUI(this.aufloesungX,this.aufloesungX,this.playerCount);
 			welt = new Welt(gui);
 			deck = new Deck();
 			runde = new Phasen(welt, deck);
-			spiel = new Spiel(this.getPlayerCount(),0,welt, runde);
+			spiel = new Spiel(this.getPlayerCount(),botCount,welt, runde);
 			runde.setSpiel(spiel);
-			gui.setKAL();
 			
 			gui.setRunde(runde);
 			gui.setSpiel(spiel);
+			gui.setKAL();
 			for (int i=0;i<playerCount;i++) {
 				dran = spiel.spielende.get(i);
 				gelesen =lies.readLine();

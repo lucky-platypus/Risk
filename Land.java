@@ -25,27 +25,42 @@ public class Land {
 	public ArrayList<Land> nachbarschaft(){
 		return nachbar;
 	}
-
+	/**
+	 * hinzufügen von truppen zum land
+	 * @param a hinzugefügte truppen
+	 */
 	public void verstaerken (int a) {
 		truppen+=a;;
 		label.setText(String.valueOf(truppen));
 	}
-
+	
+	/**
+	 * entfernen von truppen aus einem Land
+	 * @param a entfernte Truppe
+	 */
 	public void verlust (int a) {
 		if (truppen>=a) {
 			truppen -=a;
 			label.setText(String.valueOf(truppen));
-		}else System.out.println("Fehler, zu wenig Truppen vorhanden");
+		}else;
 
 	}
-
+	/**
+	 * nachbar hinzufügen
+	 * @param a nachbarland
+	 */
 	public void addnachbar(Land a) {
 		nachbar.add(a);
 	}
-
+	
+	/**
+	 * Setzt neuen Besitzer	
+	 * @param b neuer Besitzer
+	 * @param t anzahl neuer truppen
+	 */
 	public void setbesetzer(Spieler b, int t) {
 		besetzer = b;
-		truppen = t+2;
+		truppen = t;
 		label.setText(String.valueOf(truppen));
 		this.button.setBackground(b.getColor());
 	}

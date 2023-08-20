@@ -13,12 +13,19 @@ public class Kontinent {
 		enthalten = new ArrayList<Land>();
 	}
 
-
+	/**
+	 * Land hinzufügen
+	 * @param l land zum hinzufügen
+	 */
 	void addLand (Land l) {
 		enthalten.add(l);
 
 	}
-
+	/**
+	 * bestimmt ob man durch Kontinente Extra verstärkung bekommt
+	 * @param aktiv Aktiver spieler
+	 * @return anzahl extra verstärkung
+	 */
 	int Kontinentkontrolle(Spieler aktiv) {
 		int b =0;
 		int i =0;
@@ -32,6 +39,10 @@ public class Kontinent {
 		if (kontrolliert) b+=wert;
 		return b;
 	}
+	/**
+	 * erstellen der Modifizerten Kontinentliste (Liste die auch Nachbarländer der Kontinente enthält)
+	 * wird für Bot benötigt
+	 */
 	void modifizieren() {
 		Land land;
 		modifiziert = new ArrayList<Land>();
@@ -48,7 +59,7 @@ public class Kontinent {
 			
 		}
 	}
-	public String getString() {
+	public String getName() {
 		return name;
 	}
 	public void setString(String s) {

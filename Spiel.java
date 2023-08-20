@@ -14,6 +14,7 @@ public class Spiel {
 	private boolean gewinner;
 	private boolean speichernerlaubt=false;
 	private int players;
+	private int bot;
 	private Phasen runde;
 	public Land ausgewaehlt, auchausgewaehlt;
 	ArrayList<Spieler> spielende;
@@ -21,6 +22,7 @@ public class Spiel {
 	Welt erde = new Welt();
 
 	Spiel (int play,int bots,Welt welt, Phasen x){
+		bot=bots;
 		spielende = new ArrayList<Spieler>();
 		Spieler player;
 		gewinner =false;
@@ -41,6 +43,10 @@ public class Spiel {
 		}
 		runde.setaktiv(spielende.get(erde.gui1.getCurrentPlayer()));
 	}
+	/**
+	 * verteilt länder zufällig an spieler
+	 * @param erde Welt die die länder enthält
+	 */
 	void landverteilung(Welt erde) {
 		int dran=0;
 		int halte;
@@ -59,31 +65,42 @@ public class Spiel {
 		}
 
 	}
-
+	/**
+	 * Händelt die aktionen der Aktuellen runde
+	 * @param phase aktuelle phase
+	 */
 	void Runde(int phase){
 		runde.setaktiv(spielende.get(erde.gui1.getCurrentPlayer()));
 		if (phase ==0) {
+
 			if(runde.getAktiv().getMensch()) {
-			runde.verstaerkung();
+				erde.gui1.textfeld.setText("klicke auf ein land um truppen zu platzieren");
+				runde.verstaerkung();
 			}else {
-				runde.getAktiv().getIch().aiVerstaerkung();
+				runde.getAktiv().getIch().aiVerstaerkung();	
 			}
 		}else if (phase==1) {
 			
 			if(!runde.getAktiv().getMensch()) {
 			runde.getAktiv().getIch().erobern();
+			}else {
+				erde.gui1.textfeld.setText("Wähle zwei Länder und gib eine Truppenanzahl ein um einen angriff zu starten");
 			}
 			if (runde.getAktiv().hatgewonnen()) {
 				gewinner =true;
 				return;
 			}
 		}else if (phase==2) {
+
 			if(!runde.getAktiv().getMensch()) {
 			runde.getAktiv().getIch().rochade();
+			}else {
+				String aus;
+				aus ="Wähle zwei Länder und gib eine Truppenanzahl ein um Truppen zu verschieben \n \n Sie können jetzt speichern";
+				erde.gui1.textfeld.setText(aus);
 			}
 			runde.endstep();
 			speichernerlaubt=true;
-			erde.gui1.textfeld.setText("Sie können jetzt speichern");
 			if (runde.getAktiv().hatgewonnen()) {
 				gewinner =true;
 				return;
@@ -92,7 +109,12 @@ public class Spiel {
 
 
 	}
+	/**
+	 * truppenverteilung am anfang des Spiels
+	 * @param erde
+	 */
 	void truppenverteilung (Welt erde){
+		erde.gui1.textfeld.setText("klicke auf ein land um truppen zu platzieren");
 		int verteilbar;
 		verteilbar = 50 - 5*spielende.size();
 		for (int i =0;i<spielende.size();i++) {
@@ -103,10 +125,20 @@ public class Spiel {
 			erde.gui1.list[i].addActionListener(lis);
 
 		}
+		if(players==bot) {
+			for(int i =0;i<verteilbar;i+=5) {
+				for (int j=0;j<players;j++) {
+					spielende.get(j).getIch().verstEntscheidung(5);
+					
+				}
+			}
+		}
 
 			verteilbar -=1;
 		}
-
+	/**
+	 * Speichert den aktuellen Spielstand in einer textdatei
+	 */
 	void save() {
 		int a;
 		Spieler spieler;
@@ -115,9 +147,9 @@ public class Spiel {
 		try {
 		      File speicher = new File("speicherstand.txt");
 		      if (speicher.createNewFile()) {
-		        System.out.println("Neuer Speicherstand " + speicher.getName());
+			     erde.gui1.textfeld.setText("Neuer Speicherstand " + speicher.getName());
 		      } else {
-		        System.out.println("Speicherstand wurde überschrieben");
+		        erde.gui1.textfeld.setText("Speicherstand wurde überschrieben");
 		      }
 		    } catch (IOException e) {
 		      e.printStackTrace();
@@ -125,8 +157,7 @@ public class Spiel {
 		try {
 			FileWriter schreiben = new FileWriter("speicherstand.txt");
 			a=players;
-			System.out.println("blblblblb");
-			schreiben.write(a+"\n");
+			schreiben.write(a+" "+bot+"\n");
 			for (int i=0;i<a;i++) {
 				spieler=spielende.get(i);
 				if (spieler.getMensch()) {

@@ -13,7 +13,7 @@ public class Deck {
 	private int gefüllt;
 	private int tauschintensität;
 	
-	Deck(){
+	public Deck(){
 		deck= new ArrayList<Karten>();
 		ablage = new ArrayList<Karten>();
 		gefüllt = 42;
@@ -38,29 +38,50 @@ public class Deck {
 		
 	}
 	
-	void austeilen (Spieler p) {
+	/**
+	 * Verteilt eine zufällige Karte an spieler P
+	 * @param p Gewählter spieler
+	 */
+	public void austeilen (Spieler p) {
 		int r;
 		Karten haltmal;
 		Random shuffle = new Random();
-		r = shuffle.nextInt(gefüllt);
+		r = shuffle.nextInt(Math.max(gefüllt,0));
 		haltmal=deck.get(r);
 		deck.remove(r);
 		gefüllt -=1;
 		p.gibKarte(haltmal);
 		if (gefüllt==0) {
-			deck = ablage;
+			gefüllt = ablage.size();
+			for(int i = 0;i<ablage.size();i++) {
+				deck.add(ablage.get(i));
+			}
 			ablage.clear();
 		}
 		
 	}
 	
 	
-	
-	void ablage (Karten k) {
+	/**
+	 * Fügt die karte K auf die ablage hinzu
+	 * 
+	 * @param k  abgelegte karte
+	 */
+	public void ablage (Karten k) {
 		ablage.add(k);
 	}
-	
-	int eintauschen (Spieler aktiv, Karten a, Karten b, Karten c) {
+	/**
+	 * überprüft ob die Karten a,b und c tauschbar sind.
+	 * wenn ja entfernt es diese aus der hand des spielers Aktiv 
+	 * und gibt eine entsprechende menge Verstärkung zurück
+	 * 
+	 * @param aktiv eintauschender spieler
+	 * @param a karte 1
+	 * @param b karte 2
+	 * @param c karte 3
+	 * @return anzahl verstärkungen
+	 */
+	public int eintauschen (Spieler aktiv, Karten a, Karten b, Karten c) {
 		int halten;
 		if((a.getTyp()==b.getTyp() && b.getTyp()==c.getTyp())||(a.getTyp()!=b.getTyp()&& a.getTyp()!=c.getTyp() && b.getTyp()!=c.getTyp())) {
 			halten = tauschintensität;

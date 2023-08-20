@@ -31,10 +31,19 @@ public class Spieler {
 		ergebnis = new int[3];
 	}
 	
+	/**
+	 * fügt ein erobertes land hinzu
+	 * @param e erobertes land
+	 */
 	void erobert (Land e) {
 		besetzt.add(e);
 		territorien +=1;
 	}
+	
+	/**
+	 * bestimmt ob der spieler gewonnen hat(mehr als 28 länder)
+	 * @return hat gewonnen
+	 */
 	
 	boolean hatgewonnen() {
 		if (besetzt.size()>28) {
@@ -42,6 +51,10 @@ public class Spieler {
 		}else return false;
 	}
 	
+	/**
+	 * entfernt ein verlorenes Land
+	 * @param v verlorenes Land
+	 */
 	void verloren (Land v) {
 		if (besetzt.contains(v)) {
 			besetzt.remove(v);
@@ -51,10 +64,17 @@ public class Spieler {
 		}
 	}
 	
+	/**
+	 * fügt der Hand eine karte hinzu
+	 * @param g hinzuzufügende karte 
+	 */
 	void gibKarte (Karten g) {
 		hand.add(g);
 	}
-	
+	/**
+	 * entfernt eine karte 
+	 * @param n zu entfernende karte
+	 */
 	void nimmKarte (Karten n) {
 		if (hand.contains(n)) {
 			hand.remove(n);
@@ -62,18 +82,13 @@ public class Spieler {
 			System.out.println("Error: Handkarte nicht vorhanden");
 		}
 	}
-	
-	Karten kartewählen() {
-		//Placeholder Karte auswählen, über gui?
-		Karten x;
-		Random rand = new Random();
-		int a = rand.nextInt(hand.size());
-		x = hand.get(a);
-		//hand.get(1).ansagen();
-		return x;
-		
-	}
-	
+	/**
+	 * Platziert truppen in einem land
+	 * 
+	 * @param verstaerkung Anzahl an neuen truppen
+	 * @param land Land zum platzieren 
+	 * @param test üperprüfen ob noch truppen vorhanden sind(wird im actionlistener benötigt)
+	 */
 	void platzieren(int verstaerkung,Land land,int test) {
 		Land ziel = land;
 			if (besetzt.contains(ziel)){
@@ -86,7 +101,12 @@ public class Spieler {
 
 	
 
-	
+	/**
+	 * würfelt das ergegniss für den kampf
+	 *  
+	 * @param truppen anzahl der truppen die kämpfen
+ 	 * @param verteidiger gibt an ob verteidiger oder angreifer
+	 */
 	void würfeln (int truppen, boolean verteidiger) {
 		int max;
 		int a =3;

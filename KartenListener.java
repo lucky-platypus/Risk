@@ -16,6 +16,9 @@ public class KartenListener implements ActionListener {
 		spiel=test;
 		runde = spiel.getRunde();
 	}
+	/**
+	 * Action der karten ausführen
+	 */
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if(runde.getAktiv().getMensch()) {

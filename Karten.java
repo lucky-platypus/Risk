@@ -12,7 +12,10 @@ public class Karten {
 		typ = t%3;
 		position =t;
 	}
-
+	/**
+	 * String des kartenTyps bestimmen
+	 * @return string des KartenTyps 
+	 */
 	public String ansagen() {
 		String typname="";
 		if (typ==0) {

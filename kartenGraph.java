@@ -17,13 +17,19 @@ public class kartenGraph extends JButton {
 	public kartenGraph(int x, int y, int witdh,int height) {
 		this.setBounds(x, y, witdh, height);
 	}
-	
+	/**
+	 * setzen der zugehörigen karte
+	 * @param karte gewählte karte
+	 */
 	public void setKarte(Karten karte) {
 		
 		this.setText("<html>"+karte.getLand() + "<br>" + karte.ansagen() + "</html>") ;
 		this.setBorder(new LineBorder(Color.black,2));
 		Karte=karte;
 	}
+	/**
+	 * entfernen der Zugehörigen karte 
+	 */
 	public void removeKarte() {
 		this.Karte = null;
 		this.setText("");
