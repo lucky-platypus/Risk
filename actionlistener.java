@@ -4,101 +4,99 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class actionlistener implements ActionListener {
-	public Spiel spiel;
-	public int spieler = 0;
-	boolean landausgewaehlt= false;
-	boolean verlegt = false;
-	//Land ausgewaehlt, auchausgewaehlt;
+	
+	private Spiel spiel;
+	private Welt welt;
+	private int spieler = 0;
+	private boolean landausgewaehlt= false;
+	private boolean verlegt = false;
+	private Land clicked;
+	private Phasen runde;
+	
+	
 	public actionlistener(Spiel spiel1) {
 		spiel = spiel1;
+		welt =spiel.erde;
+		runde=spiel.getRunde();
 	}
+	
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		System.out.println("Klick");
-		if(spiel.erde.gui1.phase==0) {
+		if(runde.getAktiv().getMensch()) {
+		clicked = getClickedCountry(e);
+		
+		//Ausführung erste Phaste
+		if(welt.gui1.getPhase()==0) {
 
 			verlegt =false;
-			for(int i = 0;i<42;i++) {
-				if(e.getSource()== spiel.erde.gui1.list[i]) {
-					if(spiel.erde.laender[i].besetzer==spiel.runde.aktiv) {
-						Land give = spiel.erde.laender[i];
-						spiel.runde.aktiv.platzieren(1, give,spiel.runde.anzahl);
-						spiel.runde.anzahl= Math.max(spiel.runde.anzahl-1, 0);
-					}
-				}
+			
+			if(clicked.getBesetzer()==runde.getAktiv()) {
+				Land give = clicked;
+				runde.getAktiv().platzieren(1, clicked,runde.getAnzahl());
+				runde.setAnzahl( Math.max(runde.getAnzahl()-1, 0));
 			}
 		}
-		else if(spiel.erde.gui1.phase==1){
+		else if(welt.gui1.getPhase()==1){
 			if (!landausgewaehlt) {
-				for(int i = 0;i<42;i++) {
-					
-					if(e.getSource()== spiel.erde.gui1.list[i]) {
-						if (spiel.erde.laender[i].besetzer==spiel.runde.aktiv) {
-							spiel.ausgewaehlt=spiel.erde.laender[i];
+
+						if (clicked.getBesetzer()==runde.getAktiv()) {
+							spiel.ausgewaehlt=clicked;
 							landausgewaehlt = true;
-						}else spiel.erde.gui1.setText("Das ist nicht dein Land");
-					}
-				}
+						}else welt.gui1.setText("Das ist nicht dein Land");
+		
 			}else if (landausgewaehlt){
-				for(int i = 0;i<42;i++) {
-					if(e.getSource()== spiel.erde.gui1.list[i]) {
+
 						landausgewaehlt = false;
-						spiel.auchausgewaehlt=spiel.erde.laender[i];
-						spiel.runde.kampf(spiel.ausgewaehlt,spiel.auchausgewaehlt);
+						spiel.auchausgewaehlt=clicked;
+						runde.kampf(spiel.ausgewaehlt,spiel.auchausgewaehlt);
 						
-					}
-			}
 			}
 		}
-		else if(spiel.erde.gui1.phase==2){
+		else if(welt.gui1.getPhase()==2){
 			if (!landausgewaehlt&&!verlegt) {
-				for(int i = 0;i<42;i++) {
-					if(e.getSource()== spiel.erde.gui1.list[i]) {
-						spiel.ausgewaehlt=spiel.erde.laender[i];
-						landausgewaehlt = true;
-					}
-				}
-			}else if (landausgewaehlt&&!verlegt){
-				for(int i = 0;i<42;i++) {
-					if(e.getSource()== spiel.erde.gui1.list[i]) {
-						landausgewaehlt = false;
-						spiel.auchausgewaehlt=spiel.erde.laender[i];
-						spiel.runde.truppenverschiebung(spiel.ausgewaehlt,spiel.auchausgewaehlt);
-						verlegt=true;
-						spiel.ausgewaehlt=null;
-						spiel.auchausgewaehlt=null;
-						//spiel.runde.endstep();
+
+				spiel.ausgewaehlt=clicked;
+				landausgewaehlt = true;
 	
-					}
-			}
+			}else if (landausgewaehlt&&!verlegt){
+
+				landausgewaehlt = false;
+				spiel.auchausgewaehlt=clicked;
+				runde.truppenverschiebung(spiel.ausgewaehlt,spiel.auchausgewaehlt);
+				verlegt=true;
+				spiel.ausgewaehlt=null;
+				spiel.auchausgewaehlt=null;
+	
 			}
 		}
 		else {
-			for(int i = 0;i<42;i++) {
-				if(e.getSource()== spiel.erde.gui1.list[i]) {
-					Land give = spiel.erde.laender[i];
-					if (spiel.spielende.get(spieler).besetzt.contains(give) && spiel.spielende.get(spieler).truppen>0) {
+
+					Land give = clicked;
+					if (spiel.spielende.get(spieler).besetzt.contains(give) && spiel.spielende.get(spieler).getTruppen()>0) {
 						spiel.spielende.get(spieler).platzieren(5,give,10);
-						spieler = (spieler+1)%spiel.players;
-						spiel.erde.gui1.currentPlayer=spieler;
-						System.out.println(spiel.erde.gui1.currentPlayer+"Hierbinichactionlisteneractionperformed");
-						spiel.erde.gui1.nextPlayer();
-						spiel.erde.gui1.textfeld.setText("");
+						spieler = (spieler+1)%spiel.getPlayers();
+						welt.gui1.setCurrentPlayer(spieler);
+
+						welt.gui1.nextPlayer();
+						welt.gui1.textfeld.setText("");
 					}
 					else if(spiel.spielende.get(spieler).besetzt.contains(give)) {
-						spiel.erde.gui1.textfeld.setText("keine truppen mehr");
+						welt.gui1.textfeld.setText("keine truppen mehr");
 					}
 					else {
-						spiel.erde.gui1.textfeld.setText("Das ist nicht dein land");
+						welt.gui1.textfeld.setText("Das ist nicht dein land");
 						
 					}
-				}
-
-
 		}
-
-
-
-}
-}
+		clicked =null;
+		}
+	}	
+	private Land getClickedCountry(ActionEvent e) {
+		for(int i = 0;i<42;i++) {
+			if(e.getSource()==welt.gui1.list[i]) {
+				return welt.laender[i];
+			}
+		}
+		return null;
 	}
+}

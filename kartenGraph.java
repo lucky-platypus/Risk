@@ -20,7 +20,7 @@ public class kartenGraph extends JButton {
 	
 	public void setKarte(Karten karte) {
 		
-		this.setText("<html>"+karte.land + "<br>" + karte.ansagen() + "</html>") ;
+		this.setText("<html>"+karte.getLand() + "<br>" + karte.ansagen() + "</html>") ;
 		this.setBorder(new LineBorder(Color.black,2));
 		Karte=karte;
 	}

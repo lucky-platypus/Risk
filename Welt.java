@@ -2,6 +2,7 @@ package risiko;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.Scanner;
+import java.awt.Color;
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 
@@ -9,7 +10,7 @@ public class Welt {
 	public Land[] laender;
 	public Kontinent[] kontinente;
 	public GUI gui1;
-	public int step;
+	private int step;
 	public Welt() {
 		
 	}
@@ -29,8 +30,8 @@ public class Welt {
 				try {
 					gelesen = lies.readLine();
 					laender[i] = new Land(gelesen);
-					laender[i].button = gui.list[i];
-					laender[i].label = gui.labellist[i];
+					laender[i].setButton(gui.list[i]);
+					laender[i].setLabel(gui.labellist[i]);
 					switch(i) {
 					case 0,1,2,3,4,5,6,7,8:
 					}
@@ -54,7 +55,6 @@ public class Welt {
 					int asd;
 					while(scan.hasNextInt()) {
 						asd = scan.nextInt()-1;
-						//System.out.println(laender[asd].name);
 						laender[j].addnachbar(laender[asd]);
 					}
 					scan.close();
@@ -81,21 +81,25 @@ public class Welt {
 				try {
 					zeile = lies.readLine();
 					Scanner scan = new Scanner(zeile);
+					int asd;
 					while(scan.hasNextInt()) {
-						kontinente[l].addLand(laender[scan.nextInt()]);
+						asd = scan.nextInt();
+						kontinente[l].addLand(laender[asd]);
 					}
 					scan.close();
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-			}	
+
+				kontinente[l].modifizieren();
+			}
 			for(int l=0;l<6;l++) {
 				try {
 					zeile = lies.readLine();
 					Scanner scan = new Scanner(zeile);
 					while(scan.hasNextInt()) {
-						kontinente[l].wert =scan.nextInt();
+						kontinente[l].setWert(scan.nextInt());
 					}
 					scan.close();
 				} catch (IOException e) {
@@ -106,8 +110,15 @@ public class Welt {
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}
-		
+
+
+        }
+	public int getStep() {
+		return step;
+	}
+	public void setStep(int s) {
+		step =s;
+	}
 		
 	}
 	
-}

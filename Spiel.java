@@ -11,21 +11,18 @@ import java.awt.event.ActionEvent;
 
 
 public class Spiel {
-	public boolean gewinner;
-	public boolean speichernerlaubt=false;
-	public int phase;
-	public int anderreihe;
-	public int players;
-	public Phasen runde;
+	private boolean gewinner;
+	private boolean speichernerlaubt=false;
+	private int players;
+	private Phasen runde;
 	public Land ausgewaehlt, auchausgewaehlt;
 	ArrayList<Spieler> spielende;
-	Color colors[] = {Color.red,Color.green,Color.blue,Color.yellow,Color.ORANGE,Color.MAGENTA};
+	private Color colors[] = {Color.red,Color.green,Color.pink,Color.yellow,Color.ORANGE,Color.MAGENTA};
 	Welt erde = new Welt();
 
 	Spiel (int play,int bots,Welt welt, Phasen x){
 		spielende = new ArrayList<Spieler>();
 		Spieler player;
-		anderreihe =0;
 		gewinner =false;
 		players=play;
 		erde = welt;
@@ -35,10 +32,14 @@ public class Spiel {
 				player = new Spieler (true);
 			}else {
 				player = new Spieler (false);
+				Bot bot = new Bot(this,player);
+				player.setBot(bot);
+				
 			}
 			spielende.add(player);
-			spielende.get(i).color = colors[i];
+			spielende.get(i).setColor(colors[i]);
 		}
+		runde.setaktiv(spielende.get(erde.gui1.getCurrentPlayer()));
 	}
 	void landverteilung(Welt erde) {
 		int dran=0;
@@ -60,20 +61,33 @@ public class Spiel {
 	}
 
 	void Runde(int phase){
-		runde.setaktiv(spielende.get(erde.gui1.currentPlayer));
+		runde.setaktiv(spielende.get(erde.gui1.getCurrentPlayer()));
 		if (phase ==0) {
+			if(runde.getAktiv().getMensch()) {
 			runde.verstaerkung();
+			}else {
+				runde.getAktiv().getIch().aiVerstaerkung();
+			}
 		}else if (phase==1) {
-			//runde.kampfphase();
-			if (spielende.get(anderreihe).hatgewonnen()) {
+			
+			if(!runde.getAktiv().getMensch()) {
+			runde.getAktiv().getIch().erobern();
+			}
+			if (runde.getAktiv().hatgewonnen()) {
 				gewinner =true;
 				return;
 			}
 		}else if (phase==2) {
-			//runde.truppenverschiebung();
+			if(!runde.getAktiv().getMensch()) {
+			runde.getAktiv().getIch().rochade();
+			}
 			runde.endstep();
 			speichernerlaubt=true;
 			erde.gui1.textfeld.setText("Sie können jetzt speichern");
+			if (runde.getAktiv().hatgewonnen()) {
+				gewinner =true;
+				return;
+			}
 		}else System.out.println("nope");
 
 
@@ -82,7 +96,7 @@ public class Spiel {
 		int verteilbar;
 		verteilbar = 50 - 5*spielende.size();
 		for (int i =0;i<spielende.size();i++) {
-			spielende.get(i).truppen = verteilbar;
+			spielende.get(i).setTruppen(verteilbar);
 		}
 		actionlistener lis = new actionlistener(this);
 		for(int i = 0; i <42;i++) {
@@ -115,24 +129,24 @@ public class Spiel {
 			schreiben.write(a+"\n");
 			for (int i=0;i<a;i++) {
 				spieler=spielende.get(i);
-				if (spieler.mensch) {
+				if (spieler.getMensch()) {
 					schreiben.write (1+" ");
 				}else schreiben.write(0 +" ");
 				schreiben.write(spieler.besetzt.size()+" ");
 				for (int j=0; j<42;j++) {
-					if (erde.laender[j].besetzer ==spieler) {
+					if (erde.laender[j].getBesetzer() ==spieler) {
 						schreiben.write(j +" ");
-						schreiben.write(erde.laender[j].truppen +" ");
+						schreiben.write(erde.laender[j].getTruppen() +" ");
 					}	
 				}
 				schreiben.write(" 9999 ");
 				schreiben.write(spieler.hand.size()+" ");
 				for (int k=0;k<spieler.hand.size();k++) {
-					schreiben.write(spieler.hand.get(k).position +" ");
+					schreiben.write(spieler.hand.get(k).getPosition() +" ");
 				}
 				schreiben.write("\n");
 			}
-			a=erde.gui1.currentPlayer;
+			a=erde.gui1.getCurrentPlayer();
 			schreiben.write(a+"\n");
 			//schreiben.write("test");
 			schreiben.close();
@@ -144,7 +158,21 @@ public class Spiel {
 		  
 		
 	}
-	
+	public boolean getGewinner() {
+		return gewinner;
+	}
+	public boolean getSpeichernerlaubt() {
+		return speichernerlaubt;
+	}
+	public void setSpeichernerlaubt(boolean s) {
+		speichernerlaubt =s;
+	}
+	public int getPlayers() {
+		return players;
+	}
+	public Phasen getRunde() {
+		return runde;
+	}
 	
 
 	}

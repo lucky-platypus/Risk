@@ -46,7 +46,7 @@ public class GUI implements ActionListener{
 		private int height[] = {30,50,30,30,30,30,40,40,40,30,30,30,30,30,30,30,40,40,40,40,30,30,
 			30,30,60,40,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,50,30,30};
 
-		Color colors[] = {Color.red,Color.green,Color.blue,Color.yellow,Color.ORANGE,Color.MAGENTA};
+		private Color colors[] = {Color.red,Color.green,Color.pink,Color.yellow,Color.ORANGE,Color.MAGENTA};
 
         JButton nextturn=new JButton();
         JButton savegame=new JButton();
@@ -55,26 +55,24 @@ public class GUI implements ActionListener{
         JTextArea textfeld = new JTextArea();
         JTextArea textfeld2 = new JTextArea();
 
-        public int currentPlayer;
-        public int phase = 30;
+        private int currentPlayer;
+        private int phase = 30;
         private int chooseLand= 100;
-        public Phasen phasen;
-        public Spiel spiel;
+        private Phasen phasen;
+        private Spiel spiel;
 
 
 	public GUI(double scaleX,double scaleY,int playerCount) throws IOException {
 
 
 
-		playerlist = new JLabel[playerCount];
 
+		
         JFrame frame = buildFrame(scaleX,scaleY);
-
         final BufferedImage image = ImageIO.read(new File(".\\Welt.jpg"));
-
         buttonSetup(frame,scaleX,scaleY);
-
-
+        
+        //erstellen der karte mit eingelesenem bild
         JPanel pane = new JPanel() {
             @Override
             protected void paintComponent(Graphics g) {
@@ -83,12 +81,13 @@ public class GUI implements ActionListener{
             }
         };
 
-
-
+        //Erstellen der Spieleranzeige
+		playerlist = new JLabel[playerCount];
         for(int i=0; i<playerCount;i++) {
         	playerlist[i] = (buildPlayerLabel((int)(1720*scaleX),(int)((i*50+5)*scaleY),"Player"+(i+1), 100, 50));
         	frame.add(playerlist[i]);
         }
+        //Erstellen der Phasenanzeige
         for(int i=0; i<3;i++) {
         	phasenlist[i] = (buildPlayerLabel((int)(1720*scaleX),(int)((((i*50)+5)+305)*scaleY),"Phase"+(i+1), 100, 50));
         	frame.add(phasenlist[i]);
@@ -98,42 +97,14 @@ public class GUI implements ActionListener{
         kartenSetup(frame,scaleX,scaleY);
 
         
+        nextturn = thisButton("weiter",1640,1010,260,130,scaleX,scaleY);        
+        savegame = thisButton("Speichern",1420,1010,200,130,scaleX,scaleY);
+        ja = thisButton("JA",1640,900,125,100,scaleX,scaleY);
+        nein = thisButton("NEIN",1775,900,125,100,scaleX,scaleY);
         
-        nextturn.setBounds((int)(1640*scaleX),(int)(1010*scaleY),(int)(260*scaleX),(int)(130*scaleY));
-        nextturn.setText("weiter");
-        nextturn.setVisible(true);
-        nextturn.addActionListener(this);
+        textfeld =textfeld("Ausgabefeld",1640,500,260,200,scaleX,scaleY);
+        textfeld2 =textfeld("Eingabefeld",1640,705,260,190,scaleX,scaleY);
         
-        savegame.setBounds((int)(1420*scaleX),(int)(1010*scaleY),(int)(200*scaleX),(int)(130*scaleY));
-        savegame.setText("Speichern");
-        savegame.setVisible(true);
-        savegame.addActionListener(this);
-        
-        ja.setBounds((int)(1640*scaleX),(int)(900*scaleY),(int)(125*scaleX),(int)(100*scaleY));
-        ja.setText("JA");
-        ja.setVisible(true);
-        ja.addActionListener(this);
-        
-        nein.setBounds((int)(1775*scaleX),(int)(900*scaleY),(int)(125*scaleX),(int)(100*scaleY));
-        nein.setText("NEIN");
-        nein.setVisible(true);
-        nein.addActionListener(this);
-        
-        textfeld.setBounds((int)(1640*scaleX),(int)(scaleY*500),(int)(260*scaleX),(int)(200*scaleY));
-        textfeld.setLineWrap(true);
-        textfeld.setWrapStyleWord(true);
-        textfeld.setText("Textfeld");
-        textfeld.setBorder(new LineBorder(Color.BLACK,3));
-        
-        textfeld2.setBounds((int)(1640*scaleX),(int)(scaleY*705),(int)(260*scaleX),(int)(190*scaleY));
-        textfeld2.setLineWrap(true);
-        textfeld2.setWrapStyleWord(true);
-        textfeld2.setText("Eingabefeld");
-        textfeld2.setBorder(new LineBorder(Color.BLACK,3));
-
-        //kartenGraph karte = new kartenGraph(10,1020,40,40,"fick","dich");
-
-        //frame.add(karte);
         frame.add(savegame);
         frame.add(nextturn);
         frame.add(ja);
@@ -201,55 +172,75 @@ public class GUI implements ActionListener{
 		}
     }
 
-
+    //aktionen der Ja/Nein/Weiter/Speicher buttons
 	@Override
 	public void actionPerformed(ActionEvent e) {
+		if(!spiel.getGewinner()) {
 		 if(e.getSource() == nextturn) {
+				 spiel.setSpeichernerlaubt(false);
+				 spiel.erde.setStep(0);
+				 if(phase==30) {
+					 phase=0;
 
-			 spiel.speichernerlaubt=false;
-			 spiel.erde.step=0;
-			if(phase==30) {
-				phase=0;
+					 currentPlayer=0;
+					 this.nextPhase();
+					 this.nextPlayer();
 
-				currentPlayer=0;
-				this.nextPhase();
-				this.nextPlayer();
+				 }else {
+					 phase =(phase+1)%3;}
+				 	spiel.Runde(phase);
+				 	this.nextPhase();
+				 	this.nextPlayer();
+				 	if (phase == 2) {
 
-			}else {
-				phase =(phase+1)%3;}
-				spiel.Runde(phase);
-				this.nextPhase();
-				this.nextPlayer();
-				if (phase == 2) {
-
-					currentPlayer =(currentPlayer+1)%playerlist.length;
-				}
-				spiel.erde.gui1.kartenWechseln(spiel.runde.aktiv);
-
-		 }else if(e.getSource() == ja) {
-			 if (spiel.erde.step==1) {
-				 spiel.runde.kampf(spiel.ausgewaehlt , spiel.auchausgewaehlt);
+				 		currentPlayer =(currentPlayer+1)%playerlist.length;
+				 	}
+				 	spiel.erde.gui1.kartenWechseln(spiel.getRunde().getAktiv());
+	
+		 }
+		 else if(e.getSource() == ja && spiel.getRunde().getAktiv().getMensch()) {
+			 if (spiel.erde.getStep()==1) {
+				 if(spiel.ausgewaehlt !=null)
+				 spiel.getRunde().kampf(spiel.ausgewaehlt , spiel.auchausgewaehlt);
 			 }
 			 
-		 }else if(e.getSource() == nein) {
-			 if (spiel.erde.step==1) {
+		 }else if(e.getSource() == nein && spiel.getRunde().getAktiv().getMensch()) {
+			 if (spiel.erde.getStep()==1) {
 				 spiel.ausgewaehlt=null;
 				 spiel.auchausgewaehlt=null;
 				 
 			 }
 			 
-		 }else if(e.getSource() == savegame) {
-			 if (spiel.speichernerlaubt) {
+		 }else if(e.getSource() == savegame && spiel.getRunde().getAktiv().getMensch()) {
+			 if (spiel.getSpeichernerlaubt()) {
 				 spiel.save();
 			 }
 		 }
-		 
+		}else {
+			textfeld2.setText("Gewinner Gefunden");
+		}
 	}
 	
+	private JTextArea textfeld (String text,int x,int y,int height,int withd,double scaleX,double scaleY) {
+        JTextArea textfeld = new JTextArea();
+        textfeld.setBounds((int)(x*scaleX),(int)(scaleY*y),(int)(260*scaleX),(int)(190*scaleY));
+        textfeld.setLineWrap(true);
+        textfeld.setWrapStyleWord(true);
+        textfeld.setText(text);
+        textfeld.setBorder(new LineBorder(Color.BLACK,3));
+        return textfeld;
+	}
+	private JButton thisButton(String s,int x,int y,int height,int withd,double scaleX,double scaleY) {
+		JButton temp = new JButton();
+        temp.setBounds((int)(x*scaleX),(int)(y*scaleY),(int)(height*scaleX),(int)(withd*scaleY));
+        temp.setText(s);
+        temp.setVisible(true);
+        temp.addActionListener(this);
+        return temp;
+	}
 
 
-
-
+	//Aktualliserung der Phasenanzeige
 	public void nextPhase() {
 		for (int i=0;i<3;i++) {
 			phasenlist[i].setBackground(Color.white);
@@ -257,26 +248,29 @@ public class GUI implements ActionListener{
 		}
 
 	}
-
+	//Aktualliserung der Spieleranzeige
 	public void nextPlayer() {
 		for (int i=0;i<playerlist.length;i++) {
 			playerlist[i].setBackground(Color.white);
 			playerlist[currentPlayer%playerlist.length].setBackground(colors[currentPlayer%playerlist.length]);
 		}
 	}
-
+	
+	//erstellen der Labels für truppenanzeige
 	private void labelSetup(JButton[] button,JFrame frame) {
 		for(int i=0;i<button.length;i++) {
 			labellist[i]=(buildPlayerLabel(button[i].getX()+(button[i].getWidth()/2-15),button[i].getY()+button[i].getHeight(),"1",30,10));
 			frame.add(labellist[i]);
 		}
 	}
+	
+	//Aktualliserung der Truppenanzeige
 	public void changeLabelInt(JLabel c,int i) {
 		c.setText(String.valueOf(i+Integer.parseInt(c.getText())));
 	}
-	public void setText(String text) {
-		textfeld.setText(text);
-	}
+	
+	
+	//erstellen der Kartenanzeige
 	private void kartenSetup(JFrame frame,double x,double y) {
 		for(int i=0;i<5;i++) {
 			kartenGraph temp = new kartenGraph((int)((30+110*i)*x),(int)((1015)*y),(int)((100)*x),(int)((130)*y));
@@ -285,6 +279,8 @@ public class GUI implements ActionListener{
 			frame.add(cart[i]);
 		}
 	}
+	
+	//aktualliserung der Kartenanzeige
 	public void kartenWechseln(Spieler spieler) {
 		for(int i=0;i<5;i++) {
 			cart[i].removeKarte();
@@ -293,6 +289,8 @@ public class GUI implements ActionListener{
 			cart[i].setKarte(spieler.hand.get(i));
 		}
 	}
+	
+	//zuweisen der Actionlistener zu Kartenbuttons
 	void setKAL(){
         KartenListener tausch = new KartenListener(spiel);
 		for(int i = 0;i<5;i++) {
@@ -300,5 +298,21 @@ public class GUI implements ActionListener{
 		}
 
 	}
-
+	
+	//Getters und Setters
+	public int getCurrentPlayer() {
+		return	currentPlayer;
+	}
+	public void setCurrentPlayer(int set) {
+		currentPlayer=set;
+	}
+	public int getPhase() {
+		return phase;
+	}
+	public void setPhase(int temp) {
+		phase = temp;
+	}
+	public void setText(String text) {
+		textfeld.setText(text);
+	}
 }

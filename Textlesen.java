@@ -1,7 +1,7 @@
 package risiko;
 
 public class Textlesen {
-	public Welt erde;
+	private Welt erde;
 	
 	Textlesen(Welt welt){
 		

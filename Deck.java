@@ -10,8 +10,8 @@ import java.util.Random;
 public class Deck {
 	ArrayList<Karten> deck;
 	ArrayList<Karten> ablage;
-	int gefüllt;
-	int tauschintensität;
+	private int gefüllt;
+	private int tauschintensität;
 	
 	Deck(){
 		deck= new ArrayList<Karten>();
@@ -36,8 +36,6 @@ public class Deck {
 				e.printStackTrace();
 			}
 		
-		temp=deck.get(5);
-		temp.ansagen();
 	}
 	
 	void austeilen (Spieler p) {
@@ -64,25 +62,21 @@ public class Deck {
 	
 	int eintauschen (Spieler aktiv, Karten a, Karten b, Karten c) {
 		int halten;
-		if((a.typ==b.typ && b.typ==c.typ)||(a.typ!=b.typ&& a.typ!=c.typ && b.typ!=c.typ)) {
+		if((a.getTyp()==b.getTyp() && b.getTyp()==c.getTyp())||(a.getTyp()!=b.getTyp()&& a.getTyp()!=c.getTyp() && b.getTyp()!=c.getTyp())) {
 			halten = tauschintensität;
-			System.out.print(tauschintensität);
 			tauschintensität +=2;
 			Land ln;
 			for (int i=0; i < aktiv.besetzt.size();i++) {
 				ln=aktiv.besetzt.get(i);
-				if(a.land == ln.name || b.land == ln.name || c.land == ln.name) {
+				if(a.getLand() == ln.getName() || b.getLand() == ln.getName() || c.getLand() == ln.getName()) {
 					ln.verstaerken(2);
 				}
 			}
 			aktiv.nimmKarte(a);
 			aktiv.nimmKarte(b);
 			aktiv.nimmKarte(c);
-			System.out.print(tauschintensität);
-			System.out.print(halten);
 			return halten;
 		}
-		System.out.println("fehler: Karten sind so nicht tauschbar");
 		return 0;
 	}
 	

@@ -1,10 +1,10 @@
 package risiko;
 
 public class Karten {
-	public String land;
-	public int typ;
+	private String land;
+	private int typ;
 	public kartenGraph button;
-	int position;
+	private int position;
 
 
 	Karten(String l, int t){
@@ -26,6 +26,15 @@ public class Karten {
 	}
 	void setButton(kartenGraph temp){
 		button = temp;
+	}
+	public String getLand() {
+		return land;
+	}
+	public int getTyp() {
+		return typ;
+	}
+	public int getPosition() {
+		return position;
 	}
 
 }

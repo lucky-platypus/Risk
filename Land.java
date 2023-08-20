@@ -6,13 +6,13 @@ import javax.swing.JLabel;
 
 
 public class Land {
-	public int truppen;
-	public String name;
-	public Spieler besetzer;
+	private int truppen;
+	private String name;
+	private Spieler besetzer;
 	public ArrayList<Land> nachbar;
-	public boolean entdeckt;
-	public JButton button;
-	public JLabel label;
+	private boolean entdeckt;
+	private JButton button;
+	private JLabel label;
 
 	Land(String l){
 		nachbar = new ArrayList<Land>();
@@ -22,16 +22,16 @@ public class Land {
 
 
 	}
-	ArrayList<Land> nachbarschaft(){
+	public ArrayList<Land> nachbarschaft(){
 		return nachbar;
 	}
 
-	void verstaerken (int a) {
+	public void verstaerken (int a) {
 		truppen+=a;;
 		label.setText(String.valueOf(truppen));
 	}
 
-	void verlust (int a) {
+	public void verlust (int a) {
 		if (truppen>=a) {
 			truppen -=a;
 			label.setText(String.valueOf(truppen));
@@ -39,18 +39,51 @@ public class Land {
 
 	}
 
-	void addnachbar(Land a) {
+	public void addnachbar(Land a) {
 		nachbar.add(a);
 	}
 
-	void setbesetzer(Spieler b, int t) {
+	public void setbesetzer(Spieler b, int t) {
 		besetzer = b;
-		truppen = t;
+		truppen = t+2;
 		label.setText(String.valueOf(truppen));
-		this.button.setBackground(b.color);
+		this.button.setBackground(b.getColor());
 	}
 
-	String getname() {
+	public String getName() {
 		return name;
+	}
+	public void setName(String s) {
+		name = s;
+	}
+	public int getTruppen() {
+		return truppen;
+	}
+	public void setTruppen(int s) {
+		truppen=s;
+	}
+	public Spieler getBesetzer() {
+		return besetzer;
+	}
+	public void setSpieler(Spieler s) {
+		besetzer =s;
+	}
+	public boolean getEntdeckt() {
+		return entdeckt;
+	}
+	public void setEntdeckt(boolean s) {
+		entdeckt =s;
+	}
+	public JButton getButton() {
+		return button;
+	}
+	public void setButton(JButton s) {
+		button = s;
+	}
+	public JLabel getLabel() {
+		return label;
+	}
+	public void setLabel(JLabel s) {
+		label = s;
 	}
 }

@@ -7,14 +7,15 @@ import java.util.Random;
 import java.util.Scanner;
 
 public class Spieler {
-	public int territorien;
-	public boolean mensch;
+	private int territorien;
+	private boolean mensch;
 	public ArrayList<Land> besetzt;
 	public ArrayList<Karten> hand;
 	public int[] ergebnis;
-	public boolean eroberer;
-	public Color color;
-	public int truppen;
+	private boolean eroberer;
+	private Color color;
+	private int truppen;
+	private Bot ich;
 	
 	
 	
@@ -22,7 +23,7 @@ public class Spieler {
 	
 	
 	Spieler(boolean a){
-		if(a) mensch = true;
+		mensch = a;
 		territorien = 0;
 		besetzt = new ArrayList<Land>();
 		hand = new ArrayList<Karten>();
@@ -104,8 +105,42 @@ public class Spieler {
 		Land ziel = new Land("placeholder");;
 		return ziel;
 	}
-	
-	
+	public void setBot(Bot bot) {
+		ich =bot;
+	}
+	public int getTerritorien() {
+		return territorien;
+	}
+	public boolean getMensch() {
+		return mensch;
+	}
+	public void setMensch(Boolean s) {
+		mensch =s;
+	}
+	public boolean getEroberer() {
+		return eroberer;
+	}
+	public void setEroberer(Boolean s) {
+		eroberer =s;
+	}
+	public Color getColor() {
+		return color;
+	}
+	public void setColor(Color s) {
+		color =s;
+	}
+	public int getTruppen() {
+		return truppen;
+	}
+	public void setTruppen(int s) {
+		truppen =s;
+	}
+	public Bot getIch() {
+		return ich;
+	}
+	public void setIch(Bot s) {
+		ich =s;
+	}
 	
 	
 }

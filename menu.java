@@ -19,30 +19,34 @@ import java.util.Scanner;
 
 public class menu implements ActionListener {
 		
-	public double aufloesungX=10;
-	public double aufloesungY=10;
+	private double aufloesungX=10;
+	private double aufloesungY=10;
 	
-	public JComboBox box;
-	public JComboBox box2;
+	private JComboBox box;
+	private JComboBox box2;
+	private JComboBox box3;
 	
-	public double X[]= {1920,1920,1280,1280};
-	public double Y[]= {1200,1080,800,720};
+	private double X[]= {1920,1920,1280,1280};
+	private double Y[]= {1200,1080,800,720};
 	
-	public JButton weiter;
-	public JButton laden;
+	private JButton weiter;
+	private JButton laden;
 	
-	public Welt welt;
-	public Spiel spiel;
-	public Deck deck;
-	public Phasen runde;
+	private Welt welt;
+	private Spiel spiel;
+	private Deck deck;
+	private Phasen runde;
 	
 	private int playerCount;
+	private int botCount;
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		
 		aufloesungX = (X[box.getSelectedIndex()]/1920);
 		aufloesungY = Y[box.getSelectedIndex()]/1200;
 		playerCount=box2.getSelectedIndex()+1;
+		botCount =Math.min(box3.getSelectedIndex(),playerCount);
+		
 		
 		if (e.getSource()==weiter) {
 			try {
@@ -76,10 +80,12 @@ public class menu implements ActionListener {
         
         String comboBoxListe[] = {"1920x1200","1920x1080","1280x800","1280x720"};
         String comboBoxListe2[] = {"1","2","3","4","5","6"};
+        String comboBoxListe3[] = {"0","1","2","3","4","5"};
  
     
        box = new JComboBox(comboBoxListe);
        box2 = new JComboBox(comboBoxListe2);
+       box3 =new JComboBox(comboBoxListe3);
  
        box.setBounds(100, 100, 100, 10);
        panel.add(box);
@@ -87,8 +93,11 @@ public class menu implements ActionListener {
        panel.add(frage2);
        box2.setBounds(100, 100, 100, 10);
        panel.add(box2);
-       JLabel frage3 = new JLabel("                                               ");
+       JLabel frage3 = new JLabel("            Wie viel davon Bots             ");
        panel.add(frage3);
+       panel.add(box3);
+       JLabel frage4 = new JLabel("                                               ");
+       panel.add(frage4);
 
        	weiter = new JButton();
        	weiter.setSize(10, 100);
@@ -119,7 +128,7 @@ public class menu implements ActionListener {
 			welt = new Welt(gui);
 			deck = new Deck();
 			runde = new Phasen(welt, deck);
-			spiel = new Spiel(this.getPlayerCount(),0,welt, runde);
+			spiel = new Spiel(this.getPlayerCount(),this.botCount,welt, runde);
 			runde.setSpiel(spiel);
 			
 			
@@ -156,8 +165,8 @@ public class menu implements ActionListener {
 				dran = spiel.spielende.get(i);
 				gelesen =lies.readLine();
 				scan = new Scanner(gelesen);
-				if (scan.nextInt()==1)dran.mensch=true;
-				else dran.mensch=false;
+				if (scan.nextInt()==1)dran.setMensch(true);
+				else dran.setMensch(false);
 				landzahl = scan.nextInt();
 				for (int j=0;j<landzahl;j++) {
 					a=scan.nextInt();
@@ -176,11 +185,11 @@ public class menu implements ActionListener {
 			for (int l=0;l<stack.size();l++) {
 				deck.deck.remove(stack.get(l));
 			}
-			spiel.erde.gui1.phase=2;
+			spiel.erde.gui1.setPhase(2);
 			gelesen =lies.readLine();
 			scan.close();
 			scan = new Scanner(gelesen);
-			spiel.erde.gui1.currentPlayer=scan.nextInt();
+			spiel.erde.gui1.setCurrentPlayer(scan.nextInt());
 			actionlistener lis = new actionlistener(spiel);
 			for(int i = 0; i <42;i++) {
 				spiel.erde.gui1.list[i].addActionListener(lis);

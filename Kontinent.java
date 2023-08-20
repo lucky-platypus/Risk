@@ -3,9 +3,10 @@ package risiko;
 import java.util.ArrayList;
 
 public class Kontinent {
-	public String name;
+	private String name;
+	private int wert;
 	public ArrayList<Land> enthalten;
-	public int wert;
+	public ArrayList<Land> modifiziert;
 
 	Kontinent(String n){
 		name = n;
@@ -23,7 +24,7 @@ public class Kontinent {
 		int i =0;
 		boolean kontrolliert = true;
 		while (kontrolliert && i<enthalten.size()) {
-			if (enthalten.get(i).besetzer!=aktiv) {
+			if (enthalten.get(i).getBesetzer()!=aktiv) {
 				kontrolliert = false;
 			}
 			i+=1;
@@ -31,7 +32,34 @@ public class Kontinent {
 		if (kontrolliert) b+=wert;
 		return b;
 	}
-
+	void modifizieren() {
+		Land land;
+		modifiziert = new ArrayList<Land>();
+        for (int i=0;i<enthalten.size();i++) {
+            modifiziert.add(enthalten.get(i));
+        }
+		for (int i=0;i<enthalten.size();i++) {
+			land = (enthalten.get(i));
+			for (int j=0;j<land.nachbar.size();j++) {
+				if (!modifiziert.contains(land.nachbar.get(j))) {
+					modifiziert.add(land.nachbar.get(j));
+				}
+			}
+			
+		}
+	}
+	public String getString() {
+		return name;
+	}
+	public void setString(String s) {
+		name =s;
+	}
+	public int getWert() {
+		return wert;
+	}
+	public void setWert(int s) {
+		wert=s;
+	}
 
 
 }

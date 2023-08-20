@@ -89,13 +89,13 @@ public class Phasen {
 		game.truppenverschiebung();
 			
 	}*/
-	public Spieler aktiv;
+	private Spieler aktiv;
 	private int phase;
-	public Welt erde;
-	public Spiel spiel;
-	public Deck deck;
-	public int anzahl;
-	public boolean tausch=false;
+	private Welt erde;
+	private Spiel spiel;
+	private Deck deck;
+	private int anzahl;
+	private boolean tausch=false;
 
 	
 	Phasen(Welt a, Deck b){
@@ -123,44 +123,22 @@ public class Phasen {
 				tausch=true;
 			}
 
-		if (aktiv.territorien>=9) {
-			anzahl+=aktiv.territorien/3;
+		if (aktiv.getTerritorien()>=9) {
+			anzahl+=aktiv.getTerritorien()/3;
 		}else anzahl+=3;
 		for (int i=0;i<6;i++) {
 			anzahl+=erde.kontinente[i].Kontinentkontrolle(aktiv);
 		}
 
-			}
-
-		
-
-	
-	/*void kampfphase() {
-		Land von, zu;
-		boolean tiptop = false;
-		do {
-			von = aktiv.landwahl();
-			zu = aktiv.landwahl();
-			if (von.nachbar.contains(zu)) {
-				if (von.besetzer != zu.besetzer) {
-					tiptop=true;
-				}else System.out.println("Du kannst nicht dein eigenes Land angfreifen mkay?");
-			}else System.out.println("Flugzeuge wurden noch nicht erfunden");
-			System.out.println("Um doch nicht anzugreifen drücken Sie jetzt die 1");
-			//Hier die Option Phase zu wechseln
-		} while (!tiptop);
-		kampf (von, zu);
-		
-	}*/
-	
+			}	
 	
 	
 	void kampf(Land angreifer, Land verteidiger) {
 		boolean weiter = true;
 		int atruppen, min;
-		Spieler defender = verteidiger.besetzer;
+		Spieler defender = verteidiger.getBesetzer();
 		if (angreifer.nachbar.contains(verteidiger)) {
-			if (angreifer.besetzer != verteidiger.besetzer) {
+			if (angreifer.getBesetzer() != verteidiger.getBesetzer()) {
 			}else {
 				System.out.println("Du kannst nicht dein eigenes Land angfreifen mkay?");
 				weiter=false;
@@ -170,23 +148,23 @@ public class Phasen {
 			weiter = false;
 		}
 		System.out.println("Um doch nicht anzugreifen drücken Sie jetzt die 1");
-		if (angreifer.truppen==1)return;
+		if (angreifer.getTruppen()==1)return;
 		do {
 			System.out.println("Mit wievielen Truppen möchtest du angreifen?");
 			try {
 				atruppen= Integer.parseInt(erde.gui1.textfeld2.getText());
-				if (atruppen>=angreifer.truppen)atruppen=angreifer.truppen-1;
+				if (atruppen>=angreifer.getTruppen())atruppen=angreifer.getTruppen()-1;
 			} catch (NumberFormatException e) {
 				erde.gui1.textfeld.setText("Du musst ein Int eingeben");
-				atruppen= Math.max(1,angreifer.truppen-1 );
+				atruppen= Math.max(1,angreifer.getTruppen()-1 );
 			}
-		}while (atruppen >=angreifer.truppen);
+		}while (atruppen >=angreifer.getTruppen());
 		if (weiter)angreifer.verlust(atruppen);
 		while (weiter) {
 			weiter =false;
 			aktiv.würfeln(atruppen, false);
-			defender.würfeln(verteidiger.truppen, true);
-			min = 3- Math.min(2,Math.min(atruppen, verteidiger.truppen));
+			defender.würfeln(verteidiger.getTruppen(), true);
+			min = 3- Math.min(2,Math.min(atruppen, verteidiger.getTruppen()));
 			for(int i = 2; i>= min ;i--) {
 				System.out.print(aktiv.ergebnis[i]);
 				System.out.print(" vs ");
@@ -205,11 +183,11 @@ public class Phasen {
 				spiel.ausgewaehlt=null;
 				spiel.auchausgewaehlt=null;
 				
-			} else if (verteidiger.truppen==0) {
+			} else if (verteidiger.getTruppen()==0) {
 				defender.verloren(verteidiger);
 				erde.gui1.textfeld.setText("der Angriff war erfolgreich");
 				verteidiger.setbesetzer(aktiv, atruppen);
-				aktiv.eroberer=true;
+				aktiv.setEroberer(true);
 				aktiv.erobert(verteidiger);
 				weiter =false;
 				spiel.ausgewaehlt=null;
@@ -218,7 +196,7 @@ public class Phasen {
 				angreifer.verstaerken(atruppen);
 				erde.gui1.textfeld2.setText(Integer.toString(atruppen));
 				//erde.gui1.textfeld.setText("Soll der Angriff fortgesetzt werden?");
-				erde.step=1;
+				erde.setStep(1);
 				
 				
 			}
@@ -242,19 +220,19 @@ public class Phasen {
 		 System.out.println("");
 		 System.out.print("Verteidiger:  ");
 		 //for (int i = v.besetzer.ergebnis.length - 1; i >= 2-Math.min(v.truppen, 2); i--)
-		 for (int i = v.besetzer.ergebnis.length - 1; i >= 0; i--)
-			 str+=(v.besetzer.ergebnis[i] + " "); 
+		 for (int i = v.getBesetzer().ergebnis.length - 1; i >= 0; i--)
+			 str+=(v.getBesetzer().ergebnis[i] + " "); 
 		 System.out.println("");
 		 System.out.print("Der Angreifer hat noch ");
 		 System.out.print(atruppen);
 		 System.out.println(" Truppen");
 		 System.out.print("Der Verteidiger hat noch ");
-		 System.out.print(v.truppen);
+		 System.out.print(v.getTruppen());
 		 System.out.println(" Truppen");
 		 str+="\nDer Angreifer hat noch ";
 		 str+=atruppen;
 		 str+=" Truppen \nDer Verteidiger hat noch ";
-		 str+=v.truppen;
+		 str+=v.getTruppen();
 		 str+=" Truppen \nAngriff fortgesetzt ?";
 		 erde.gui1.textfeld.setText(str);
 		 
@@ -274,16 +252,16 @@ public class Phasen {
 			ArrayList<Land> kopf = new ArrayList<Land>();
 			kopf.add(von);
 			for (int i=0; i< 42;i++) {
-				erde.laender[i].entdeckt=false;
+				erde.laender[i].setEntdeckt(false);
 			}
 			j=0;
 			do {
 				über=kopf.get(j);
 				for (int i=0;i<über.nachbar.size();i++) {
 					if (aktiv.besetzt.contains(über.nachbar.get(i))) {
-						if (!über.nachbar.get(i).entdeckt) {
+						if (!über.nachbar.get(i).getEntdeckt()) {
 							kopf.add(über.nachbar.get(i));
-							über.nachbar.get(i).entdeckt = true;
+							über.nachbar.get(i).setEntdeckt(true);
 						}
 					}
 				}
@@ -296,36 +274,56 @@ public class Phasen {
 		
 		if(verbunden) {
 				System.out.println("Wie viele Truppen sollen verschoben werden?");
-				System.out.println(von.truppen);
-				System.out.println(zu.truppen);
+				System.out.println(von.getTruppen());
+				System.out.println(zu.getTruppen());
 				do {
 				try {
 					anzahl= Integer.parseInt(erde.gui1.textfeld2.getText());
-					if (anzahl>=von.truppen) anzahl=von.truppen-1;
+					if (anzahl>=von.getTruppen()) anzahl=von.getTruppen()-1;
 				} catch (NumberFormatException e) {
 					erde.gui1.textfeld.setText("Du musst ein Int eingeben");
-					anzahl= Math.max(1,von.truppen-1 );
+					anzahl= Math.max(1,von.getTruppen()-1 );
 				}
-				}while (anzahl>=von.truppen);
+				}while (anzahl>=von.getTruppen());
 				
 			von.verlust(anzahl);
 			zu.verstaerken(anzahl);
 			scan1.close();
 			for(int i =0; i<kopf.size();i++) {
-				kopf.get(i).entdeckt = true;
+				kopf.get(i).setEntdeckt(true);
 			}
 		}
 	}
 	
-	
-	
-	
-	
 	void endstep(){
-		if (aktiv.eroberer) {
+		if (aktiv.getEroberer()) {
 			deck.austeilen(aktiv);
-			aktiv.eroberer=false;
+			aktiv.setEroberer(false);
 		}
+	}
+	public Spieler getAktiv() {
+		return aktiv;
+	}
+	public void setAktiv(Spieler s) {
+		aktiv = s;
+	}
+	public Deck getDeck() {
+		return deck;
+	}
+	public void setDeck(Deck s) {
+		deck=s;
+	}
+	public int getAnzahl() {
+		return anzahl;
+	}
+	public void setAnzahl(int s) {
+		anzahl=s;
+	}
+	public boolean getTausch() {
+		return tausch;
+	}
+	public void setTausch(boolean s) {
+		tausch =s;
 	}
 	
 	
