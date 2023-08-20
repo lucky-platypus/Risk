@@ -1,6 +1,7 @@
 package risiko;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 
 public class Bot {
 	private boolean fertig;
@@ -10,6 +11,7 @@ public class Bot {
 	Land angreifer, verteidiger;
 	int[] kontinentwert =  { 3, 6, 2, 4, 1, 7};
 	int[] isolation;
+	String ausgabe;
 	int verstaerkungen =0;
 	// Diese Daten kommen von http://www.datagenetics.com/blog/november22011/index.html
 	double[][] chancen = {
@@ -92,29 +94,48 @@ public class Bot {
 		int k =0;
 		int a =0; 
 		int anzahl =0;
+		Karten karte;
 		ArrayList<Karten> zwischen = new ArrayList<Karten>();
+		HashSet<Integer> encounteredTypes = new HashSet<>();
 		do {
-			zwischen.clear();
-			for (int j=0;j<ich.hand.size();j++) {
-				if (ich.hand.get(j).getTyp()==anzahl) zwischen.add(ich.hand.get(j));
-				if(anzahl==3) {
-					zwischen.add(ich.hand.get(j));
-					for(int l=0;l<zwischen.size();l++) {
-						if (zwischen.get(l)!=ich.hand.get(i)) {
-							if (zwischen.get(l).getTyp()==ich.hand.get(i).getTyp()) zwischen.remove(ich.hand.get(i).getTyp());
-						}
-					}
-				}
-			}
-			anzahl+=1;
-		}while (zwischen.size()<3&&anzahl<=3);
-		if (anzahl==4) return 0;
+	        zwischen.clear();
+	        encounteredTypes.clear();
+
+	        for (int j = 0; j < ich.hand.size(); j++) {
+	            if (ich.hand.get(j).getTyp() == anzahl) {
+	                zwischen.add(ich.hand.get(j));
+	            }
+	        }
+
+	        if (anzahl == 3) {
+	            for (int j = 0; j < ich.hand.size(); j++) {
+	                karte = ich.hand.get(j);
+	                if (!encounteredTypes.contains(karte.getTyp())&& !zwischen.contains(karte)) {
+	                    zwischen.add(karte);
+	                    encounteredTypes.add(karte.getTyp());
+	                }
+	            }
+	        }
+
+	        anzahl += 1;
+	    } while (zwischen.size() < 3 && anzahl <= 3);
+		if (anzahl==4 && zwischen.size()<3) return 0;
 		anzahl=spiel.getRunde().getDeck().eintauschen(ich, zwischen.get(0), zwischen.get(1), zwischen.get(2));
 		fertig =true;
 		return anzahl;
 		
 	}
 		
+	
+	/*{
+	if(j==0) {
+		zwischen.add(karte);
+	}else if (zwischen.size()==1) {
+		if (karte.getTyp()!=zwischen.get(0).getTyp()) zwischen.add(karte);
+			
+	}else if (zwischen.size()==2) {
+		if (karte.getTyp()!=zwischen.get(0).getTyp()&&karte.getTyp()!=zwischen.get(1).getTyp()) zwischen.add(karte);
+	}*/
 		
 	/*	for (int j=0;j<ich.hand.size();j++) {
 			if (ich.hand.get(j).typ==0) {
@@ -199,6 +220,7 @@ public class Bot {
 	}
 	
 	void erobern() {
+
 		System.out.print("funk");
 		fertig =false;
 		double intensität =50;
@@ -392,8 +414,8 @@ public class Bot {
 		int haltmal=0;
 		Land land;
 		ArrayList<Land> grenze = new ArrayList<Land>();
-		
 		ArrayList<Land> inland = new ArrayList<Land>();
+		
 		for (int i=0; i<ich.besetzt.size();i++) {
 			land=ich.besetzt.get(i);
 			for(int j=0;j<land.nachbar.size();j++) {
@@ -445,9 +467,50 @@ public class Bot {
 				}
 			}
 		}
+		int hochwert=0;
+		int x = 0;
+		for (int i=0;i<inland.size();i++) {
+			if (inland.get(i).getTruppen()>=hochwert) {
+				hochwert=inland.get(i).getTruppen();
+				x=i;
+			}
+		}
+		if (hochwert>2*verstärkungen) {
+			System.out.println("Ich bin hier rein");
+			ArrayList<Land> zweite = new ArrayList<Land>();
+			j=x;
+			x=0;
+			verstärkungen=hochwert;
+			land = inland.get(j);
+			zweite.add(land);
+			while (x<zweite.size()) {
+				System.out.println("Ich bin hier rein");
+				land=zweite.get(x);
+				for (int i=0;i<land.nachbar.size();i++) {
+					if (land.nachbar.get(i).getBesetzer()==ich && !zweite.contains(land.nachbar.get(i))) {
+						zweite.add(land.nachbar.get(i));
+					}
+				}
+				x+=1;
+			}
+			hoch=0;
+			for (int i=0;i<grenze.size();i++) {
+				System.out.println("Hier auch");
+				if (zweite.contains(grenze.get(i))) {
+					if(grenzwert[i]>hoch) {
+						hoch=grenzwert[i];
+						haltmal=i;
+					}
+					hoch=grenzwert[i];
+				}
+			}
+		}
+		
+		
 		if (verstärkungen>1) {
 			inland.get(j).verlust(verstärkungen-1);
 			grenze.get(haltmal).verstaerken(verstärkungen-1);
+			spiel.erde.gui1.textfeld.setText(verstärkungen-1 +" Truppen verschoben von \n"+inland.get(j).getName()+"\nnach \n" +grenze.get(haltmal).getName()+"\nSie können jetzt speichern");
 		}
 		fertig =true;
 	}
