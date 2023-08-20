@@ -11,7 +11,6 @@ public class Bot {
 	Land angreifer, verteidiger;
 	int[] kontinentwert =  { 3, 6, 2, 4, 1, 7};
 	int[] isolation;
-	String ausgabe;
 	int verstaerkungen =0;
 	// Diese Daten kommen von http://www.datagenetics.com/blog/november22011/index.html
 	double[][] chancen = {
@@ -50,11 +49,6 @@ public class Bot {
 	void aiVerstaerkung() {
 		fertig =false;
 		int anzahl=0;
-		int x;
-		int max =0;
-		Land land, lal;
-		double chance;
-		lal= ich.besetzt.get(1);
 		if (ich.getTerritorien()>=9) {
 			anzahl+=ich.getTerritorien()/3;
 		}else anzahl+=3;
@@ -63,7 +57,18 @@ public class Bot {
 		}
 		if (ich.hand.size()>=4) anzahl +=kartentausch();
 		verstaerkungen=anzahl;
-		chance = zielkontinent();;
+		verstEntscheidung(anzahl);
+		fertig =true;
+		
+		
+	}
+	public void verstEntscheidung(int s) {
+		int x;
+		int max =0;
+		double chance;
+		Land land, lal;
+		lal= ich.besetzt.get(1);
+		chance = zielkontinent();
 		for (int i=0;i<ziel.enthalten.size();i++) {
 			x=0;
 			land = ziel.enthalten.get(i);
@@ -77,13 +82,9 @@ public class Bot {
 			if (x>=max) {
 				max=x;
 				lal =land;
-				System.out.println(land.getName());
 			}
 		}
-		lal.verstaerken(anzahl);
-		fertig =true;
-		
-		
+		lal.verstaerken(s);
 	}
 	
 	
@@ -126,16 +127,6 @@ public class Bot {
 		
 	}
 		
-	
-	/*{
-	if(j==0) {
-		zwischen.add(karte);
-	}else if (zwischen.size()==1) {
-		if (karte.getTyp()!=zwischen.get(0).getTyp()) zwischen.add(karte);
-			
-	}else if (zwischen.size()==2) {
-		if (karte.getTyp()!=zwischen.get(0).getTyp()&&karte.getTyp()!=zwischen.get(1).getTyp()) zwischen.add(karte);
-	}*/
 		
 	/*	for (int j=0;j<ich.hand.size();j++) {
 			if (ich.hand.get(j).typ==0) {
@@ -220,7 +211,6 @@ public class Bot {
 	}
 	
 	void erobern() {
-
 		System.out.print("funk");
 		fertig =false;
 		double intensität =50;
@@ -414,8 +404,9 @@ public class Bot {
 		int haltmal=0;
 		Land land;
 		ArrayList<Land> grenze = new ArrayList<Land>();
+
 		ArrayList<Land> inland = new ArrayList<Land>();
-		
+
 		for (int i=0; i<ich.besetzt.size();i++) {
 			land=ich.besetzt.get(i);
 			for(int j=0;j<land.nachbar.size();j++) {
@@ -505,8 +496,8 @@ public class Bot {
 				}
 			}
 		}
-		
-		
+
+
 		if (verstärkungen>1) {
 			inland.get(j).verlust(verstärkungen-1);
 			grenze.get(haltmal).verstaerken(verstärkungen-1);
@@ -514,7 +505,6 @@ public class Bot {
 		}
 		fertig =true;
 	}
-	
 	double signifikanz (Land a) {
 		double teil=0;
 		Kontinent k;
