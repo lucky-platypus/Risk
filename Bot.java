@@ -56,7 +56,6 @@ public class Bot {
 			anzahl+=spiel.erde.kontinente[i].Kontinentkontrolle(ich);
 		}
 		if (ich.hand.size()>=4) anzahl +=kartentausch();
-		verstaerkungen=anzahl;
 		verstEntscheidung(anzahl);
 		fertig =true;
 		
@@ -70,6 +69,7 @@ public class Bot {
 		Land land, lal;
 		lal= ich.besetzt.get(1);
 		chance = zielkontinent();
+		verstaerkungen =s;
 		System.out.println(ich.toString());
 		System.out.println(ziel.getName());
 		System.out.println(zielb.getName());
@@ -189,10 +189,11 @@ public class Bot {
 	//Berechnet den Kontinent, welcher diese Runde bevorzugt angegriffen werden soll, aus den höchsten Erfolgschancen und dem Strategischen Wert des Kontinents
 	double zielkontinent () {
 
-		int freund, feind, dis,das;
+		int  dis,das;
 		dis=0;
 		das=0;
-		double max,moritz;
+		boolean keine =false;
+		double freund, feind, max,moritz;
 		Land land;
 		Kontinent kontinent;
 		double[] relation = new double[12];
@@ -200,7 +201,11 @@ public class Bot {
 			freund =0;
 			feind =0;
 			kontinent =spiel.erde.kontinente[i];
-			if (kontinent.Kontinentkontrolle(ich)==0) {
+			keine = false;
+			for (int m=0;m<kontinent.enthalten.size();m++) {
+				if (kontinent.enthalten.get(m).getBesetzer()==ich) keine =true;
+			}
+			if (kontinent.Kontinentkontrolle(ich)==0 && keine) {
 				for(int j=0;j<kontinent.modifiziert.size();j++) {
 					land =kontinent.modifiziert.get(j);
 					if (land.getBesetzer()==ich) {
